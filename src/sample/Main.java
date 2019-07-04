@@ -1,8 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -11,8 +9,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Hello World");
-        LayoutCrator layoutCrator = new LayoutCrator();
-        Scene scene = new Scene(layoutCrator.layout());
+        LayoutCreator layoutCreator = new LayoutCreator();
+        Scene scene = new Scene(layoutCreator.layout());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
