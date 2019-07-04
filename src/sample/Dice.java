@@ -12,13 +12,18 @@ public class Dice extends Pane {
     private Random randGen = new Random();
     public int currentSide;
     public Rectangle rectangle = new Rectangle();
-    public static double diceSize = 120;
+    public final double diceSize = 120;
+    public final double diceArc = 20;
+
 
     public Dice (double x, double y) {
         rectangle.relocate(0,0);
         rectangle.setHeight(diceSize);
         rectangle.setWidth(diceSize);
+        rectangle.setArcHeight(diceArc);
+        rectangle.setArcWidth(diceArc);
         rectangle.setFill(Color.valueOf("#C3C3C3"));
+
         getChildren().addAll(rectangle);
         relocate(x, y);
         for (int sideNum = 0; sideNum < 6; sideNum += 1) {

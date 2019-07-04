@@ -5,8 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class DiceBoard{
-    public static double X = 425;
-    public static double Y = 500;
+    public final double X = 425;
+    public final double Y = 500;
+    public final double arc = 30;
 //    private int numOfRolls = 10;
 
     public Pane layoutCreator (double x, double y){
@@ -24,6 +25,8 @@ public class DiceBoard{
         rect2.smoothProperty().setValue(true);
         rect2.setFill(Color.valueOf("#A36525"));
         rect2.relocate(25, 75);
+        rect2.setArcWidth(arc);
+        rect2.setArcHeight(arc);
         layout.getChildren().addAll(rect2);
         Dice dice1 = new Dice(50,100);
         Dice dice2 = new Dice(250,100) ;

@@ -15,12 +15,15 @@ public class DiceController extends Pane {
     private double XTEXT = 20;
     private double YTEXT = 15;
     private double FontSize = 15;
+    private final double arc = 25;
 
     public DiceController (double x, double y, Dice dice1, Dice dice2){
         relocate(x, y);
         key.relocate(0,0);
         key.setWidth(XSIZE);
         key.setHeight(YSIZE);
+        key.setArcHeight(arc);
+        key.setArcWidth(arc);
         key.setFill(Color.valueOf("#1155DC"));
         getChildren().addAll(key);
         keyText.setText("Roll Dice");
