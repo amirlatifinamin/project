@@ -23,10 +23,12 @@ public class Stockpile extends Pane {
     private Rectangle pile;
     private Rectangle pileBoarder;
     private Rectangle[] pieces = new Rectangle[numOfPieces];
+    private ScoreBoard scoreBoard;
     // Test
     private Rectangle key;
 
-    public Stockpile(double x, double y, PieceType t){
+    public Stockpile(double x, double y, PieceType t, ScoreBoard s){
+        scoreBoard = s;
         this.type = t;
         relocate(x, y);
         if (type.equals(PieceType.red)){
@@ -70,6 +72,7 @@ public class Stockpile extends Pane {
     public void addPieceToPile(){
         getChildren().addAll(pieces[numOfPiecesInPile]);
         numOfPiecesInPile += 1;
+        scoreBoard.updateScores(type);
     }
 
 }

@@ -3,12 +3,15 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.util.Random;
 
 public class DiceBoard{
     public static final double height = 220;
-    public static final double width = 190;
+    public static final double width = ScoreBoard.scoreBoardWidth;
+    private static double fontSize = 20;
     public final double X = 215;
     public final double Y = 300;
     public final double arc = 30;
@@ -24,6 +27,10 @@ public class DiceBoard{
     private Random randGen = new Random();
     private ScoreBoard scoreBoard;
     private PieceType currentUser;
+    private Rectangle turnTile = new Rectangle();
+    private Text turnTitle = new Text();
+    private boolean firstRoll;
+    private boolean canRollDice;
 
 //    private int numOfRolls = 10;
 
@@ -61,39 +68,72 @@ public class DiceBoard{
         dice4Shadow.setWidth(60);
         dice4Shadow.setHeight(60);
         diceController.setOnMouseClicked(event -> {
-            dice1.newDice();
-            dice2.newDice();
-            dice3.newDice();
-            dice4.newDice();
-            try{
-                layout.getChildren().remove(dice3);
-                layout.getChildren().remove(dice4);
-            } catch (Error e){
+            if (firstRoll){
+                dice1.rollDice();
+                dice2.rollDice();
+                if (dice1.getDiceValue() > dice2.getDiceValue()){
+                    currentUser = PieceType.red;
+                    dice1.newDice();
+                    dice2.newDice();
+                    turnTile.setFill(Color.valueOf("#770000"));
+                    firstRoll = false;
+                    canRollDice = true;
+                } else if (dice1.getDiceValue() > dice2.getDiceValue()){
+                    currentUser = PieceType.white;
+                    dice1.newDice();
+                    dice2.newDice();
+                    turnTile.setFill(Color.valueOf("#F2CE7C"));
+                    firstRoll = false;
+                    canRollDice = true;
+                }
+            } else if (canRollDice) {
+                canRollDice = false;
+                diceController.lockkey();
+                dice1.newDice();
+                dice2.newDice();
+                dice3.newDice();
+                dice4.newDice();
+                try {
+                    layout.getChildren().remove(dice3);
+                    layout.getChildren().remove(dice4);
+                } catch (Error e) {
 
-            }
-            dice1.rollDice();
-            dice2.rollDice();
-            numOfMovements = 2;
-            doubledDice = false;
-            newDiceRoll = true;
-            if (dice1.getDiceValue() == dice2.getDiceValue()){
-                dice3.setDiceSide(dice1.getDiceValue());
-                dice4.setDiceSide(dice1.getDiceValue());
-                layout.getChildren().addAll(dice3, dice4);
-                numOfMovements = 4;
-                doubledDice = true;
-            }
-            scoreBoard.updateScores(currentUser);
-            if (currentUser == PieceType.red){
-                currentUser = PieceType.white;
-            } else {
-                currentUser = PieceType.red;
+                }
+                dice1.rollDice();
+                dice2.rollDice();
+                numOfMovements = 2;
+                doubledDice = false;
+                newDiceRoll = true;
+                if (dice1.getDiceValue() == dice2.getDiceValue()) {
+                    dice3.setDiceSide(dice1.getDiceValue());
+                    dice4.setDiceSide(dice1.getDiceValue());
+                    layout.getChildren().addAll(dice3, dice4);
+                    numOfMovements = 4;
+                    doubledDice = true;
+                }
+                scoreBoard.updateScores(currentUser);
             }
         });
         layout.getChildren().addAll(dice1, dice2, diceController, dice4Shadow, dice3Shadow);
         layout.setPrefSize(400,350);
         numOfMovements = 0;
         doubledDice = false;
+        turnTitle.relocate(200,20);
+        turnTitle.setText("Turn");
+        turnTitle.setFont(Font.font(fontSize));
+        turnTitle.setFill(Color.valueOf("#000000"));
+        layout.getChildren().addAll(turnTitle);
+        turnTile.relocate(170, 60);
+        turnTile.setHeight(150);
+        turnTile.setWidth(110);
+        turnTile.setArcHeight(20);
+        turnTile.setArcWidth(20);
+        turnTile.setFill(Color.valueOf("#000000"));
+        layout.getChildren().addAll(turnTile);
+        firstRoll = true;
+        dice1.firstRollDice(PieceType.red);
+        dice2.firstRollDice(PieceType.white);
+        canRollDice = false;
         // Movement test key
 //        Rectangle testMove = new Rectangle();
 //        testMove.setWidth(100);
@@ -110,7 +150,7 @@ public class DiceBoard{
         return layout;
     }
 
-    public boolean makeMovement (int val){
+    public boolean canMove (int val){
         if (numOfMovements > 0){
             if (dice1.getDiceValue() == val && !dice1.diceUsed){
                 numOfMovements -= 1;
@@ -130,6 +170,17 @@ public class DiceBoard{
                 return true;
             }
         }
+        if (numOfMovements == 0){
+            if (currentUser == PieceType.red) {
+                currentUser = PieceType.white;
+                turnTile.setFill(Color.valueOf("#F2CE7C"));
+            } else {
+                currentUser = PieceType.red;
+                turnTile.setFill(Color.valueOf("#770000"));
+            }
+            canRollDice = true;
+            diceController.unlockKey();
+        }
         return false;
     }
 
@@ -144,4 +195,19 @@ public class DiceBoard{
             return 0;
     }
 
+    public PieceType getCurrentUser() {
+        return currentUser;
+    }
+
+    public void changeTurn (){
+        if (currentUser == PieceType.red) {
+            currentUser = PieceType.white;
+            turnTile.setFill(Color.valueOf("#F2CE7C"));
+        } else {
+            currentUser = PieceType.red;
+            turnTile.setFill(Color.valueOf("#770000"));
+        }
+        canRollDice = true;
+        diceController.unlockKey();
+    }
 }

@@ -18,6 +18,7 @@ public class ScoreBoard extends Pane {
     private Stockpile whitePile;
     private DiceBoard diceBoard;
     private UserStatistics redStats;
+    private Graveyard graveyard;
     private UserStatistics whiteStats;
     private Rectangle background;
     private Rectangle textBackground;
@@ -40,13 +41,8 @@ public class ScoreBoard extends Pane {
     private Text whiteFailuresTXT;
     private Text whiteDiceSumTXT;
 
-    public ScoreBoard(double x, double y, Stockpile rp, Stockpile wp, DiceBoard d, UserStatistics r, UserStatistics w){
+    public ScoreBoard(double x, double y){
         relocate(x, y);
-        redPile = rp;
-        whitePile = wp;
-        diceBoard = d;
-        redStats = r;
-        whiteStats = w;
         double currentX , currentY;
         background = rectangleInit(0,0, scoreBoardWidth, scoreBoardHeight, "#A36525");
         getChildren().addAll(background);
@@ -133,11 +129,20 @@ public class ScoreBoard extends Pane {
         }
     }
 
+    public void init (Stockpile rp, Stockpile wp, DiceBoard d, UserStatistics r, UserStatistics w, Graveyard g){
+        graveyard = g;
+        redPile = rp;
+        whitePile = wp;
+        diceBoard = d;
+        redStats = r;
+        whiteStats = w;
+    }
+
     public void updateScores(PieceType t){
         if (t == PieceType.red)
-            redStats.updateStats(diceBoard.getSumValueOfDices(), redPile.getNumOfPiecesInPile(), 0);
+            redStats.updateStats(diceBoard.getSumValueOfDices(), redPile.getNumOfPiecesInPile(), graveyard.getSumOfRedKilled());
         else
-            whiteStats.updateStats(diceBoard.getSumValueOfDices(), whitePile.getNumOfPiecesInPile(), 0);
+            whiteStats.updateStats(diceBoard.getSumValueOfDices(), whitePile.getNumOfPiecesInPile(), graveyard.getSumOfWhiteKilled());
         textRefresh();
     }
 

@@ -3,6 +3,7 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import sun.dc.pr.PRError;
 import sun.util.locale.provider.FallbackLocaleProviderAdapter;
 
 import java.util.Random;
@@ -66,6 +67,14 @@ public class Dice extends Pane {
     public void newDice (){
         rectangle.setFill(Color.valueOf("#C3C3C3"));
         diceUsed = false;
+    }
+
+    public void firstRollDice (PieceType type){
+        if (type == PieceType.red){
+            rectangle.setFill(Color.valueOf("#770000"));
+        } else {
+            rectangle.setFill(Color.valueOf("#F2CE7C"));
+        }
     }
 
 
