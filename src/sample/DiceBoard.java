@@ -151,8 +151,62 @@ public class DiceBoard{
     }
 
     public boolean canMove (int val){
-        if (numOfMovements > 0){
-            if (dice1.getDiceValue() == val && !dice1.diceUsed){
+        if (numOfMovements == 4)  {
+            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() == val){
+                numOfMovements = 0;
+                changeTurn();
+                dice1.useDice();
+                dice2.useDice();
+                dice3.useDice();
+                dice4.useDice();
+                return true;
+            } else if (dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue()  == val) {
+                numOfMovements = 1;
+                changeTurn();
+                dice2.useDice();
+                dice3.useDice();
+                dice4.useDice();
+                return true;
+            } else if (dice3.getDiceValue() + dice4.getDiceValue() == val) {
+                numOfMovements = 2;
+                changeTurn();
+                dice3.useDice();
+                dice4.useDice();
+                return true;
+            } else if (dice4.getDiceValue() == val){
+                numOfMovements = 3;
+                changeTurn();
+                dice4.useDice();
+                return true;
+            }
+        } else if (numOfMovements == 3){
+            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() == val){
+                numOfMovements = 0;
+                changeTurn();
+                dice1.useDice();
+                dice2.useDice();
+                dice3.useDice();
+                return true;
+            } else if (dice2.getDiceValue() + dice3.getDiceValue() == val) {
+                numOfMovements = 1;
+                changeTurn();
+                dice2.useDice();
+                dice3.useDice();
+                return true;
+            } else if (dice3.getDiceValue() == val) {
+                numOfMovements = 2;
+                changeTurn();
+                dice3.useDice();
+                return true;
+            }
+        }else if (numOfMovements > 0){
+            if (numOfMovements == 2 && dice1.getDiceValue() + dice2.getDiceValue() == val){
+                numOfMovements = 0;
+                changeTurn();
+                dice1.useDice();
+                dice2.useDice();
+                return true;
+            } else if (dice1.getDiceValue() == val && !dice1.diceUsed){
                 numOfMovements -= 1;
                 if (numOfMovements == 0){
                     changeTurn();
