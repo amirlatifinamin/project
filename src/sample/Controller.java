@@ -16,6 +16,8 @@ public class Controller {
     private DiceBoard diceBoard;
     private Stockpile redStockPile;
     private Stockpile whiteStockPile;
+    public static int numOfRedKilledPieces = 0;
+    public static int numOfWhiteKilledPieces = 0;
 
     public Controller(Graveyard graveyard,
                       DiceBoard diceBoard, Stockpile redStockPile, Stockpile whiteStockPile) {
@@ -39,7 +41,6 @@ public class Controller {
             int oldTriangleNumber = piece.getPlaceNumber();
             int newTriangleNumber = findTriangleNumber(newXPosition, newYPosition);
             distance = findDistance(piece, newTriangleNumber, newXPosition, newYPosition);
-            System.out.println(distance);
 
 
             MoveType moveType = findMoveType(newXPosition, newYPosition, newTriangleNumber, piece, distance, diceBoard);
@@ -54,6 +55,13 @@ public class Controller {
                     triangles[newTriangleNumber].addPiece(piece);
                     if (piece.isKilled()) {
                         graveyard.removePiece(piece);
+                        piece.setKilled(false);
+                        if (piece.getPieceType() == PieceType.red) {
+                            numOfRedKilledPieces--;
+                        } else {
+                            numOfWhiteKilledPieces--;
+                        }
+                        System.out.println(numOfRedKilledPieces);
                     } else {
                         triangles[oldTriangleNumber].removePiece(piece);
                     }
@@ -64,15 +72,29 @@ public class Controller {
                 }
                 case Kill: {
                     Piece killedPiece = triangles[newTriangleNumber].getPieces().get(0);
+                    int killedPieceOldPlace = killedPiece.getPlaceNumber();
                     killedPiece.setPlaceNumber(killedPiece.getPieceType() == pieceType.white ? -1 : 24);
                     killedPiece.setKilled(true);
-                    updateNumOfPiecesInBase(killedPiece, 0, true);
+                    if (killedPiece.getPieceType() == PieceType.red) {
+                        numOfRedKilledPieces++;
+                    } else {
+                        numOfWhiteKilledPieces++;
+                    }
+                    updateNumOfPiecesInBase(killedPiece, killedPieceOldPlace, true);
                     graveyard.addPiece(killedPiece);
                     triangles[newTriangleNumber].killPiece();
                     newYPosition = triangles[newTriangleNumber].findCoordinationOfNewPiece();
                     triangles[newTriangleNumber].addPiece(piece);
                     if (piece.isKilled()) {
                         graveyard.removePiece(piece);
+                        piece.setKilled(false);
+                        if (piece.getPieceType() == PieceType.red) {
+                            numOfRedKilledPieces--;
+                        } else {
+                            numOfWhiteKilledPieces--;
+                        }
+                        System.out.println(numOfRedKilledPieces);
+
                     } else {
                         triangles[oldTriangleNumber].removePiece(piece);
                     }
@@ -89,12 +111,13 @@ public class Controller {
                         whiteStockPile.addPieceToPile();
                         numOfWhitePiecesInPile++;
                     }
-                    pieces.getChildren().removeAll(piece);
-                    if (numOfRedPiecesInPile == 15){
+                    triangles[oldTriangleNumber].removePiece(piece);
+                    pieces.getChildren().remove(piece);
+                    if (numOfRedPiecesInPile == 15) {
                         alert.setContentText("Red is the winner");
                         alert.show();
                     }
-                    if (numOfWhitePiecesInPile == 15){
+                    if (numOfWhitePiecesInPile == 15) {
                         alert.setContentText("White is the winner");
                         alert.show();
                     }
@@ -123,12 +146,18 @@ public class Controller {
             return MoveType.None;
         }
 
-        if(diceBoard.getCurrentUser() != piece.getPieceType()){
+        if (diceBoard.getCurrentUser() != piece.getPieceType()) {
+            return MoveType.None;
+        }
+
+        if ((piece.getPieceType() == PieceType.red && numOfRedKilledPieces > 0 && !piece.isKilled()) ||
+                (piece.getPieceType() == PieceType.white && numOfWhiteKilledPieces > 0 && !piece.isKilled())) {
             return MoveType.None;
         }
 
         if (isInRedStockPileArea(newXPosition, newYPosition)) {
-            if (piece.getPieceType() == PieceType.red && numOfRedPiecesInBase == 15) {
+            System.out.println(distance);
+            if (piece.getPieceType() == PieceType.red && numOfRedPiecesInBase == 15 && diceBoard.canMove(Math.abs(distance))) {
                 return MoveType.StockPile;
             } else {
                 return MoveType.None;
@@ -136,7 +165,7 @@ public class Controller {
         }
 
         if (isInWhiteStockPileArea(newXPosition, newYPosition)) {
-            if (piece.getPieceType() == PieceType.white && numOfWhitePiecesInBase == 15) {
+            if (piece.getPieceType() == PieceType.white && numOfWhitePiecesInBase == 15 && diceBoard.canMove(Math.abs(distance))) {
                 return MoveType.StockPile;
             } else {
                 return MoveType.None;
@@ -166,12 +195,12 @@ public class Controller {
 
     public void updateNumOfPiecesInBase(Piece piece, int oldPlace, boolean isKilled) {
         if (isKilled) {
-            if (piece.getPieceType() == PieceType.red) {
+            if (piece.getPieceType() == PieceType.red && oldPlace <= 5) {
                 numOfRedPiecesInBase--;
-            } else {
+            }
+            if (piece.getPieceType() == PieceType.white && oldPlace >= 18) {
                 numOfWhitePiecesInBase--;
             }
-            System.out.println(numOfRedPiecesInBase);
             return;
         }
 
