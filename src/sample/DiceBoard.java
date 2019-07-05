@@ -33,9 +33,7 @@ public class DiceBoard{
         DiceController diceController = new DiceController(45, 90, dice1, dice2);
         diceController.setOnMouseClicked(event -> {
             dice1.rollDice();
-            System.out.println("rollDice1 Done");
             dice2.rollDice();
-            System.out.println("rollDice2 Done");
         });
         layout.getChildren().addAll(dice1, dice2, diceController);
         layout.setPrefSize(400,350);

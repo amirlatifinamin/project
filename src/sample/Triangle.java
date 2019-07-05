@@ -18,9 +18,12 @@ public class Triangle extends Pane {
     private Controller controller;
     private int numberOfPieces;
     private PieceType typeOfPieces;
+    private Graveyard graveyard;
 
 
-    public Triangle(double x, double y, TriangleType type, Controller controller, int number) {
+    public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard) {
+        this.graveyard = graveyard;
+        this.typeOfPieces = null;
         this.number = number;
         this.controller = controller;
         this.x = x;
@@ -42,14 +45,14 @@ public class Triangle extends Pane {
     public Group initializePieces(int initialNumOfPieces) {
         Group pieces = new Group();
         double firstY = triangleType.direction == 1 ? 0 : 11 * triangleBase;
-        PieceType pieceType;
         if (this.number == 0 || this.number == 11 || this.number == 16 || this.number == 18) {
             typeOfPieces = PieceType.white;
-        } else {
+        }
+        if (this.number == 5 || this.number == 7 || this.number == 12 || this.number == 23){
             typeOfPieces = PieceType.red;
         }
         for (int index = 0; index < initialNumOfPieces; index++) {
-            Piece piece = controller.makeHandlePiece(x, firstY + index * triangleType.direction * triangleBase, typeOfPieces);
+            Piece piece = controller.makeHandlePiece(x, firstY + index * triangleType.direction * triangleBase, typeOfPieces, number, graveyard);
             this.pieces.add(piece);
             pieces.getChildren().addAll(piece);
             numberOfPieces++;
@@ -70,9 +73,10 @@ public class Triangle extends Pane {
     public void addPiece(Piece piece){
         pieces.add(piece);
         numberOfPieces++;
+        System.out.println(numberOfPieces);
         rearrangePieces();
         if (numberOfPieces==1){
-            this.typeOfPieces = piece.pieceType;
+            this.typeOfPieces = piece.getPieceType();
         }
     }
 
@@ -83,8 +87,13 @@ public class Triangle extends Pane {
         if (numberOfPieces==0){
             this.typeOfPieces = null;
         }
+    }
 
-
+    public void killPiece(){
+        System.out.println(numberOfPieces);
+        pieces.remove(pieces.get(0));
+        numberOfPieces--;
+//        System.out.println(numberOfPieces);
     }
 
     public void rearrangePieces(){
@@ -103,5 +112,17 @@ public class Triangle extends Pane {
 
     public PieceType getTypeOfPieces() {
         return typeOfPieces;
+    }
+
+    public int getNumberOfPieces() {
+        return numberOfPieces;
+    }
+
+    public ArrayList<Piece> getPieces() {
+        return pieces;
+    }
+
+    public int getNumber() {
+        return number;
     }
 }

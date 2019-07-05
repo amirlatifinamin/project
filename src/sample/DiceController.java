@@ -33,9 +33,7 @@ public class DiceController extends Pane {
         getChildren().addAll(keyText);
         setOnMouseClicked(event -> {
             dice1.rollDice();
-            System.out.println("rollDice1 Done");
             dice2.rollDice();
-            System.out.println("rollDice2 Done");
             //}
         });
     }

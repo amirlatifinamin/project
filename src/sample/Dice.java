@@ -41,11 +41,8 @@ public class Dice extends Pane {
         getChildren().addAll(diceSides[randomSide]);
         try{
             Thread.sleep(waitTime);
-            System.out.println("*");
         }catch(InterruptedException ex){
-            System.out.println("#");
         }
-        System.out.println("Current Side: " + currentSide);
     }
 
     public int getDiceValue (){
