@@ -7,8 +7,8 @@ public class LayoutCreator {
     public static int row = 2;
     public static int column = 12;
     public static double triangleBase = 50;
-    private final double diceBoardWidth = 425;
-    private final double diceBoardHeight = 500;
+    private final double diceBoardWidth = 215;
+    private final double diceBoardHeight = 300;
     private double boardWidth = 15 * triangleBase + diceBoardWidth;
     private double boardHeight = 12 * triangleBase;
     private final double diceBoardX = boardWidth - diceBoardWidth;

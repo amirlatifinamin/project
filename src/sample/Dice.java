@@ -12,7 +12,7 @@ public class Dice extends Pane {
     private Random randGen = new Random();
     public int currentSide;
     public Rectangle rectangle = new Rectangle();
-    public final double diceSize = 120;
+    public final double diceSize = 60;
     public final double diceArc = 20;
 
 

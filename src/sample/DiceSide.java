@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class DiceSide extends Pane {
-    public static double diceSize = 120;
+    public static double diceSize = 60;
     public Circle[] points = new Circle[6];
 
     public DiceSide (int value, double x, double y){
