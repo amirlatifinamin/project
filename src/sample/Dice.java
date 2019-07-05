@@ -3,8 +3,7 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import sun.dc.pr.PRError;
-import sun.util.locale.provider.FallbackLocaleProviderAdapter;
+
 
 import java.util.Random;
 
