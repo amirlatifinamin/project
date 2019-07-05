@@ -20,9 +20,16 @@ public class Triangle extends Pane {
     private PieceType typeOfPieces;
     private Graveyard graveyard;
     private DiceBoard diceBoard;
+    private Stockpile redStockPile;
+    private Stockpile whiteStockPile;
+    private Group piecesGroup;
 
 
-    public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard, DiceBoard diceBoard) {
+    public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard,
+                    DiceBoard diceBoard, Stockpile redStockPile, Stockpile whiteStockPile, Group pieces) {
+        this.piecesGroup = pieces;
+        this.whiteStockPile = whiteStockPile;
+        this.redStockPile = redStockPile;
         this.graveyard = graveyard;
         this.diceBoard = diceBoard;
         this.typeOfPieces = null;
@@ -44,8 +51,8 @@ public class Triangle extends Pane {
 
     }
 
-    public Group initializePieces(int initialNumOfPieces) {
-        Group pieces = new Group();
+    public Group initializePieces(int initialNumOfPieces, Group pieces) {
+        Group piecesGroup = new Group();
         double firstY = triangleType.direction == 1 ? 0 : 11 * triangleBase;
         if (this.number == 0 || this.number == 11 || this.number == 16 || this.number == 18) {
             typeOfPieces = PieceType.white;
@@ -55,12 +62,12 @@ public class Triangle extends Pane {
         }
         for (int index = 0; index < initialNumOfPieces; index++) {
             Piece piece = controller.makeHandlePiece(x, firstY + index * triangleType.direction * triangleBase,
-                    typeOfPieces, number, graveyard, diceBoard);
+                    typeOfPieces, number, pieces);
             this.pieces.add(piece);
             pieces.getChildren().addAll(piece);
             numberOfPieces++;
         }
-        return pieces;
+        return piecesGroup;
     }
 
     public double findCoordinationOfNewPiece() {

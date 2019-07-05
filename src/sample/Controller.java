@@ -1,14 +1,34 @@
 package sample;
 
+import javafx.scene.Group;
+import javafx.scene.control.Alert;
+
 import static sample.LayoutCreator.*;
 
 
 public class Controller {
 
-    int numOfRedPiecesInBase = 5;
-    int numOfWhitePiecesInBase = 5;
+    private int numOfRedPiecesInBase = 5;
+    private int numOfWhitePiecesInBase = 5;
+    private int numOfRedPiecesInPile = 0;
+    private int numOfWhitePiecesInPile = 0;
+    private Graveyard graveyard;
+    private DiceBoard diceBoard;
+    private Stockpile redStockPile;
+    private Stockpile whiteStockPile;
 
-    public Piece makeHandlePiece(double x, double y, PieceType pieceType, int number, Graveyard graveyard, DiceBoard diceBoard) {
+    public Controller(Graveyard graveyard,
+                      DiceBoard diceBoard, Stockpile redStockPile, Stockpile whiteStockPile) {
+        this.graveyard = graveyard;
+        this.diceBoard = diceBoard;
+        this.redStockPile = redStockPile;
+        this.whiteStockPile = whiteStockPile;
+    }
+
+    public Piece makeHandlePiece(double x, double y, PieceType pieceType, int number, Group pieces) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Finished");
+        alert.setHeaderText("The game is finished");
         Piece piece = new Piece(x, y, pieceType, number);
         piece.setOnMouseReleased(e -> {
             int distance;
@@ -19,6 +39,7 @@ public class Controller {
             int oldTriangleNumber = piece.getPlaceNumber();
             int newTriangleNumber = findTriangleNumber(newXPosition, newYPosition);
             distance = findDistance(piece, newTriangleNumber, newXPosition, newYPosition);
+            System.out.println(distance);
 
 
             MoveType moveType = findMoveType(newXPosition, newYPosition, newTriangleNumber, piece, distance, diceBoard);
@@ -41,14 +62,11 @@ public class Controller {
                     piece.move(newXPosition, newYPosition);
                     break;
                 }
-                case kill: {
+                case Kill: {
                     Piece killedPiece = triangles[newTriangleNumber].getPieces().get(0);
                     killedPiece.setPlaceNumber(killedPiece.getPieceType() == pieceType.white ? -1 : 24);
                     killedPiece.setKilled(true);
-                    updateNumOfPiecesInBase(piece, 0, true);
-                    if(killedPiece.getPieceType() == PieceType.red){
-
-                    }
+                    updateNumOfPiecesInBase(killedPiece, 0, true);
                     graveyard.addPiece(killedPiece);
                     triangles[newTriangleNumber].killPiece();
                     newYPosition = triangles[newTriangleNumber].findCoordinationOfNewPiece();
@@ -62,6 +80,25 @@ public class Controller {
                     updateNumOfPiecesInBase(piece, oldPlace, false);
                     piece.move(newXPosition, newYPosition);
                     break;
+                }
+                case StockPile: {
+                    if (piece.getPieceType() == PieceType.red) {
+                        redStockPile.addPieceToPile();
+                        numOfRedPiecesInPile++;
+                    } else {
+                        whiteStockPile.addPieceToPile();
+                        numOfWhitePiecesInPile++;
+                    }
+                    pieces.getChildren().removeAll(piece);
+                    if (numOfRedPiecesInPile == 15){
+                        alert.setContentText("Red is the winner");
+                        alert.show();
+                    }
+                    if (numOfWhitePiecesInPile == 15){
+                        alert.setContentText("White is the winner");
+                        alert.show();
+                    }
+
                 }
             }
 
@@ -86,22 +123,22 @@ public class Controller {
             return MoveType.None;
         }
 
-        if (isInRedStockPileArea(newXPosition, newYPosition)) {
-            System.out.println("salam");
-            if (piece.getPieceType() == PieceType.red && numOfRedPiecesInBase == 15) {
+        if(diceBoard.getCurrentUser() != piece.getPieceType()){
+            return MoveType.None;
+        }
 
-            }
-            else {
+        if (isInRedStockPileArea(newXPosition, newYPosition)) {
+            if (piece.getPieceType() == PieceType.red && numOfRedPiecesInBase == 15) {
+                return MoveType.StockPile;
+            } else {
                 return MoveType.None;
             }
         }
 
         if (isInWhiteStockPileArea(newXPosition, newYPosition)) {
-            System.out.println("salam");
             if (piece.getPieceType() == PieceType.white && numOfWhitePiecesInBase == 15) {
-
-            }
-            else {
+                return MoveType.StockPile;
+            } else {
                 return MoveType.None;
             }
         }
@@ -118,7 +155,7 @@ public class Controller {
             if (!diceBoard.canMove(Math.abs(distance))) {
                 return MoveType.None;
             }
-            return MoveType.kill;
+            return MoveType.Kill;
         } else {
             if (!diceBoard.canMove(Math.abs(distance))) {
                 return MoveType.None;
@@ -128,11 +165,10 @@ public class Controller {
     }
 
     public void updateNumOfPiecesInBase(Piece piece, int oldPlace, boolean isKilled) {
-        if(isKilled){
-            if(piece.getPieceType()==PieceType.red){
+        if (isKilled) {
+            if (piece.getPieceType() == PieceType.red) {
                 numOfRedPiecesInBase--;
-            }
-            else {
+            } else {
                 numOfWhitePiecesInBase--;
             }
             System.out.println(numOfRedPiecesInBase);
@@ -145,7 +181,6 @@ public class Controller {
         if (piece.getPieceType() == PieceType.white && oldPlace < 18 && piece.getPlaceNumber() >= 18) {
             this.numOfWhitePiecesInBase++;
         }
-        System.out.println(numOfRedPiecesInBase);
 
     }
 
@@ -170,10 +205,10 @@ public class Controller {
         } else if (isInWhiteStockPileArea(newXPosition, newYPosition)) {
             distance = 24 - piece.getPlaceNumber();
         } else if ((newYPosition > 5 * triangleBase && newYPosition < 7 * triangleBase) ||
-                newYPosition > 12 * triangleBase ||
-                newYPosition < 0 ||
-                newXPosition < triangleBase ||
-                newXPosition > 14 * triangleBase ||
+                (newYPosition > 12 * triangleBase) ||
+                (newYPosition < 0) ||
+                (newXPosition < triangleBase) ||
+                (newXPosition >= 14 * triangleBase) ||
                 (newXPosition < 8 * triangleBase && newXPosition > 7 * triangleBase) ||
                 (newXPosition == piece.getOldX())) {
             distance = 0;

@@ -1,5 +1,5 @@
 package sample;
 
 public enum MoveType {
-    None,Normal,kill,
+    None,Normal, Kill,StockPile;
 }

@@ -23,7 +23,7 @@ public class LayoutCreator {
     public static final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
     private ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY);
     private Group trianglesGroup = new Group();
-    private Group pieces = new Group();
+    public static Group pieces = new Group();
     private DiceBoard diceBoard = new DiceBoard();
     private Graveyard graveyard = new Graveyard(scoreBoard);
     private Border border = new Border();
@@ -35,8 +35,8 @@ public class LayoutCreator {
     private UserStatistics whiteStats = new UserStatistics(PieceType.white);
 
 
-    public LayoutCreator(Controller controller) {
-        this.controller = controller;
+    public LayoutCreator() {
+        this.controller = new Controller(graveyard, diceBoard, redStockpile, whiteStockpile);
     }
 
 
@@ -46,7 +46,7 @@ public class LayoutCreator {
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
         board.getChildren().addAll(border, graveyard, this.trianglesGroup,
-                diceBoardPane, redStockpile, whiteStockpile, scoreBoard, this.pieces);
+                diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces);
         board.setStyle("-fx-background-color: #21242E");
         initializeTriangles();
         return board;
@@ -84,14 +84,16 @@ public class LayoutCreator {
         for (int index = 1; index <= column; index++) {
             int initialNumOfPieces = findInitialNumOfPieces(index);
             Triangle upTriangle = new Triangle((index <= column / 2 ? index : index + 1) * triangleBase, 0.0,
-                    index % 2 == 0 ? TriangleType.upRed : TriangleType.upWhite, this.controller, 12 - index, graveyard, diceBoard);
+                    index % 2 == 0 ? TriangleType.upRed : TriangleType.upWhite, this.controller, 12 - index,
+                    graveyard, diceBoard, redStockpile, whiteStockpile, this.pieces);
             triangles[12 - index] = upTriangle;
             Triangle downTriangle = new Triangle((index <= column / 2 ? index : index + 1) * triangleBase, boardHeight / 2 + triangleBase,
-                    index % 2 == 0 ? TriangleType.downWhite : TriangleType.downRed, this.controller, 11 + index, graveyard, diceBoard);
+                    index % 2 == 0 ? TriangleType.downWhite : TriangleType.downRed, this.controller, 11 + index,
+                    graveyard, diceBoard, redStockpile, whiteStockpile, this.pieces);
             triangles[11 + index] = downTriangle;
-            Group upPieces = upTriangle.initializePieces(initialNumOfPieces);
-            Group downPieces = downTriangle.initializePieces(initialNumOfPieces);
-            this.pieces.getChildren().addAll(upPieces, downPieces);
+            Group upPieces = upTriangle.initializePieces(initialNumOfPieces, pieces);
+            Group downPieces = downTriangle.initializePieces(initialNumOfPieces, pieces);
+            pieces.getChildren().addAll(upPieces, downPieces);
             this.trianglesGroup.getChildren().addAll(upTriangle, downTriangle);
 
         }

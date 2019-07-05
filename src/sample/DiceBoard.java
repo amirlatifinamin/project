@@ -162,20 +162,17 @@ public class DiceBoard{
                 return true;
             } else if (dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue()  == val) {
                 numOfMovements = 1;
-                changeTurn();
                 dice2.useDice();
                 dice3.useDice();
                 dice4.useDice();
                 return true;
             } else if (dice3.getDiceValue() + dice4.getDiceValue() == val) {
                 numOfMovements = 2;
-                changeTurn();
                 dice3.useDice();
                 dice4.useDice();
                 return true;
             } else if (dice4.getDiceValue() == val){
                 numOfMovements = 3;
-                changeTurn();
                 dice4.useDice();
                 return true;
             }
@@ -189,13 +186,11 @@ public class DiceBoard{
                 return true;
             } else if (dice2.getDiceValue() + dice3.getDiceValue() == val) {
                 numOfMovements = 1;
-                changeTurn();
                 dice2.useDice();
                 dice3.useDice();
                 return true;
             } else if (dice3.getDiceValue() == val) {
                 numOfMovements = 2;
-                changeTurn();
                 dice3.useDice();
                 return true;
             }

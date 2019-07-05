@@ -28,6 +28,7 @@ public class Piece extends StackPane {
             mouseY = e.getSceneY();
         });
 
+
         setOnMouseDragged(e -> {
             relocate(e.getSceneX() + oldX - mouseX, e.getSceneY() + oldY - mouseY);
         });
