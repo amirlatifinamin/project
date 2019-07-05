@@ -76,7 +76,6 @@ public class Triangle extends Pane {
     public void addPiece(Piece piece){
         pieces.add(piece);
         numberOfPieces++;
-        System.out.println(numberOfPieces);
         rearrangePieces();
         if (numberOfPieces==1){
             this.typeOfPieces = piece.getPieceType();
@@ -93,7 +92,6 @@ public class Triangle extends Pane {
     }
 
     public void killPiece(){
-        System.out.println(numberOfPieces);
         pieces.remove(pieces.get(0));
         numberOfPieces--;
     }

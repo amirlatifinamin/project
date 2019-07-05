@@ -9,17 +9,18 @@ public class LayoutCreator {
     public static double triangleBase = 50;
     private final double diceBoardWidth = DiceBoard.width;
     private final double diceBoardHeight = DiceBoard.height;
-    private final double stockpileWidth = Stockpile.pileWidth + triangleBase;
-    private final double stockpileHeight = Stockpile.pileHeight;
-    private double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
-    private double boardHeight = 12 * triangleBase;
+    public static final double stockpileWidth = Stockpile.pileWidth + triangleBase;
+    public static final double stockpileHeight = Stockpile.pileHeight;
+    private static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
+    private static double boardHeight = 12 * triangleBase;
     private final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2;
     private final double scoreboardY = triangleBase / 2;
     private final double diceBoardX = scoreboardX;
     private final double diceBoardY = scoreboardY + ScoreBoard.scoreBoardHeight + triangleBase / 3;
-    private final double stockpileX = boardWidth - ScoreBoard.scoreBoardWidth - stockpileWidth;
-    private final double redStockpileY = triangleBase / 2;
-    private final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
+//    public static final double stockpileX = boardWidth - ScoreBoard.scoreBoardWidth - stockpileWidth;
+    public static final double stockpileX = 15*triangleBase;
+    public static final double redStockpileY = triangleBase / 2;
+    public static final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
     private ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY);
     private Group trianglesGroup = new Group();
     private Group pieces = new Group();
@@ -44,8 +45,8 @@ public class LayoutCreator {
         scoreBoard.init(redStockpile, whiteStockpile, diceBoard, redStats, whiteStats, graveyard);
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
-        board.getChildren().addAll(border, graveyard, this.trianglesGroup, this.pieces,
-                diceBoardPane, redStockpile, whiteStockpile, scoreBoard);
+        board.getChildren().addAll(border, graveyard, this.trianglesGroup,
+                diceBoardPane, redStockpile, whiteStockpile, scoreBoard, this.pieces);
         board.setStyle("-fx-background-color: #21242E");
         initializeTriangles();
         return board;
