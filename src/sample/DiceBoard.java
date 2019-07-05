@@ -78,7 +78,7 @@ public class DiceBoard{
                     turnTile.setFill(Color.valueOf("#770000"));
                     firstRoll = false;
                     canRollDice = true;
-                } else if (dice1.getDiceValue() > dice2.getDiceValue()){
+                } else if (dice1.getDiceValue() < dice2.getDiceValue()){
                     currentUser = PieceType.white;
                     dice1.newDice();
                     dice2.newDice();
@@ -154,32 +154,37 @@ public class DiceBoard{
         if (numOfMovements > 0){
             if (dice1.getDiceValue() == val && !dice1.diceUsed){
                 numOfMovements -= 1;
+                if (numOfMovements == 0){
+                    changeTurn();
+                }
                 dice1.useDice();
+//                System.out.println(numOfMovements);
                 return true;
             } else if (dice2.getDiceValue() == val && !dice2.diceUsed) {
                 numOfMovements -= 1;
+                if (numOfMovements == 0){
+                    changeTurn();
+                }
                 dice2.useDice();
+//                System.out.println(numOfMovements);
                 return true;
             } else if (dice3.getDiceValue() == val && !dice3.diceUsed) {
                 numOfMovements -= 1;
+                if (numOfMovements == 0){
+                    changeTurn();
+                }
                 dice3.useDice();
+//                System.out.println(numOfMovements);
                 return true;
             } else if (dice4.getDiceValue() == val && !dice4.diceUsed) {
                 numOfMovements -= 1;
+                if (numOfMovements == 0){
+                    changeTurn();
+                }
                 dice4.useDice();
+//                System.out.println(numOfMovements);
                 return true;
             }
-        }
-        if (numOfMovements == 0){
-            if (currentUser == PieceType.red) {
-                currentUser = PieceType.white;
-                turnTile.setFill(Color.valueOf("#F2CE7C"));
-            } else {
-                currentUser = PieceType.red;
-                turnTile.setFill(Color.valueOf("#770000"));
-            }
-            canRollDice = true;
-            diceController.unlockKey();
         }
         return false;
     }
