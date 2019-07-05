@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Stockpile extends Pane {
-    public static final int numOfPieces = 12;
-    public static final double pieceHeight = 17;
+    public static final int numOfPieces = 15;
+    public static final double pieceHeight = 13;
     public static final double pieceWidth = 50;
     public static final double boarderWidth = 3;
     public static final double pileWidth = 56;
@@ -45,11 +45,11 @@ public class Stockpile extends Pane {
             currentPieceY += pieceHeight + boarderWidth;
         }
         numOfPiecesInPile = 0;
-        key = rectangleInit(0, pileHeight + 10, 100, 50, "#1155DC");
+        key = rectangleInit(100, 0, 100, 50, "#1155DC");
         key.setOnMouseClicked(event -> {
             this.addPieceToPile();
         });
-        getChildren().addAll(key);
+        //getChildren().addAll(key);
     }
 
     private Rectangle rectangleInit (double x, double y, double width, double height, String color){

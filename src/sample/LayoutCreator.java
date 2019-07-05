@@ -10,14 +10,14 @@ public class LayoutCreator {
     private final double diceBoardWidth = 215;
     private final double diceBoardHeight = 300;
     private final double stockpileWidth = Stockpile.pileWidth + triangleBase;
-    private final double stockpileHeith = Stockpile.pieceHeight;
+    private final double stockpileHeight = Stockpile.pileHeight;
     private double boardWidth = 15 * triangleBase + diceBoardWidth + stockpileWidth;
     private double boardHeight = 12 * triangleBase;
     private final double diceBoardX = boardWidth - diceBoardWidth;
     private final double diceBoardY = (boardHeight - diceBoardHeight)/2;
     private final double stockpileX = boardWidth - diceBoardWidth - stockpileWidth;
     private final double redStockpileY = triangleBase/2;
-    private final double whiteStockPileY = redStockpileY + stockpileHeith + triangleBase/2;
+    private final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
     private Group trianglesGroup = new Group();
     private Group pieces = new Group();
     private DiceBoard diceBoard = new DiceBoard();
@@ -33,8 +33,9 @@ public class LayoutCreator {
         Pane board = new Pane();
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY);
         Stockpile redStockpile = new Stockpile(stockpileX, redStockpileY, PieceType.red);
+        Stockpile whiteStockpile = new Stockpile(stockpileX, whiteStockPileY, PieceType.white);
         board.setPrefSize(boardWidth, boardHeight);
-        board.getChildren().addAll(this.trianglesGroup, this.pieces, diceBoardPane, redStockpile);
+        board.getChildren().addAll(this.trianglesGroup, this.pieces, diceBoardPane, redStockpile, whiteStockpile);
         board.setStyle("-fx-background-color: #21242E");
         initializeTriangles();
         return board;
