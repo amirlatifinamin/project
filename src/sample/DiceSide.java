@@ -69,8 +69,6 @@ public class DiceSide extends Pane {
     }
     public Circle setPoint(double x, double y){
         Circle point = new Circle();
-//        point.setCenterX(diceSize*x);
-//        point.setCenterY(diceSize*y);
         point.relocate(diceSize*x, diceSize*y);
         point.setRadius(diceSize/10);
         point.setFill(Color.valueOf("#000000"));
