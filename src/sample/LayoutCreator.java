@@ -20,19 +20,18 @@ public class LayoutCreator {
     private final double stockpileX = boardWidth - ScoreBoard.scoreBoardWidth - stockpileWidth;
     private final double redStockpileY = triangleBase / 2;
     private final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
+    private ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY);
     private Group trianglesGroup = new Group();
     private Group pieces = new Group();
     private DiceBoard diceBoard = new DiceBoard();
-    private Graveyard graveyard = new Graveyard();
+    private Graveyard graveyard = new Graveyard(scoreBoard);
     private Border border = new Border();
     private Controller controller;
     public static Triangle[] triangles = new Triangle[row * column];
-    private Stockpile redStockpile = new Stockpile(stockpileX, redStockpileY, PieceType.red);
-    private Stockpile whiteStockpile = new Stockpile(stockpileX, whiteStockPileY, PieceType.white);
+    private Stockpile redStockpile = new Stockpile(stockpileX, redStockpileY, PieceType.red, scoreBoard);
+    private Stockpile whiteStockpile = new Stockpile(stockpileX, whiteStockPileY, PieceType.white, scoreBoard);
     private UserStatistics redStats = new UserStatistics(PieceType.red);
     private UserStatistics whiteStats = new UserStatistics(PieceType.white);
-    private ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY, redStockpile, whiteStockpile,
-            diceBoard, redStats, whiteStats);
 
 
     public LayoutCreator(Controller controller) {
@@ -42,6 +41,7 @@ public class LayoutCreator {
 
     public Pane layout() {
         Pane board = new Pane();
+        scoreBoard.init(redStockpile, whiteStockpile, diceBoard, redStats, whiteStats, graveyard);
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
         board.getChildren().addAll(border, graveyard, this.trianglesGroup, this.pieces,

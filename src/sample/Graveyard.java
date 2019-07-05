@@ -15,8 +15,10 @@ public class Graveyard extends Pane {
     private double xBase, yBase;
     private int sumOfRedKilled = 0;
     private int sumOfWhiteKilled = 0;
+    private ScoreBoard scoreboard;
 
-    public Graveyard() {
+    public Graveyard(ScoreBoard s) {
+        scoreboard = s;
         numberOfPieces = 0;
         xBase = 7 * triangleBase;
         yBase = 5.5 * triangleBase;
@@ -31,9 +33,11 @@ public class Graveyard extends Pane {
         pieces.add(piece);
         if(piece.getPieceType()==PieceType.red){
             sumOfRedKilled++;
+            scoreboard.updateScores(PieceType.red);
         }
         else {
             sumOfWhiteKilled++;
+            scoreboard.updateScores(PieceType.white);
         }
         numberOfPieces++;
         rearrangePieces();
@@ -72,5 +76,11 @@ public class Graveyard extends Pane {
 
     }
 
+    public int getSumOfRedKilled() {
+        return sumOfRedKilled;
+    }
 
+    public int getSumOfWhiteKilled() {
+        return sumOfWhiteKilled;
+    }
 }

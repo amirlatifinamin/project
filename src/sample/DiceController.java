@@ -37,4 +37,12 @@ public class DiceController extends Pane {
             //}
         });
     }
+
+    public void unlockKey (){
+        key.setFill(Color.valueOf("#1155DC"));
+    }
+
+    public void lockkey (){
+        key.setFill(Color.valueOf("#606060"));
+    }
 }
