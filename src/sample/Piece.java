@@ -8,14 +8,17 @@ import static sample.LayoutCreator.triangleBase;
 
 public class Piece extends StackPane {
     private Circle piece = new Circle();
-    double mouseX, mouseY;
+    private Circle border = new Circle();
+    private double mouseX, mouseY;
     private double oldX, oldY;
     public PieceType pieceType;
 
-    public Piece(PieceType pieceType){
-        piece.setRadius(triangleBase/2);
+    public Piece(double x, double y, PieceType pieceType) {
+        piece.setRadius(triangleBase / 2);
+        border.setRadius(triangleBase / 2 + 2);
         this.pieceType = pieceType;
-        getChildren().add(piece);
+        move(x, y);
+        getChildren().addAll(border, piece);
         piece.setFill(pieceType == PieceType.red ? Color.valueOf("#770000") : Color.valueOf("#F2CE7C"));
         setOnMousePressed(e -> {
             mouseX = e.getSceneX();
@@ -35,5 +38,13 @@ public class Piece extends StackPane {
 
     public void abortMove() {
         relocate(oldX, oldY);
+    }
+
+    public double getOldX() {
+        return oldX;
+    }
+
+    public double getOldY() {
+        return oldY;
     }
 }

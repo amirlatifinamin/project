@@ -8,8 +8,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Controller controller = new Controller();
         primaryStage.setTitle("Hello World");
-        LayoutCreator layoutCreator = new LayoutCreator();
+        LayoutCreator layoutCreator = new LayoutCreator(controller);
         Scene scene = new Scene(layoutCreator.layout());
         primaryStage.setScene(scene);
         primaryStage.show();
