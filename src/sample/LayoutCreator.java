@@ -11,8 +11,8 @@ public class LayoutCreator {
     private final double diceBoardHeight = DiceBoard.height;
     public static final double stockpileWidth = Stockpile.pileWidth + triangleBase;
     public static final double stockpileHeight = Stockpile.pileHeight;
-    private static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
-    private static double boardHeight = 12 * triangleBase;
+    public static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
+    public static double boardHeight = 12 * triangleBase;
     private final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2;
     private final double scoreboardY = triangleBase / 2;
     private final double diceBoardX = scoreboardX;
@@ -33,6 +33,7 @@ public class LayoutCreator {
     private Stockpile whiteStockpile = new Stockpile(stockpileX, whiteStockPileY, PieceType.white, scoreBoard);
     private UserStatistics redStats = new UserStatistics(PieceType.red);
     private UserStatistics whiteStats = new UserStatistics(PieceType.white);
+    private StartPage startPage = new StartPage();
 
 
     public LayoutCreator() {
@@ -45,8 +46,12 @@ public class LayoutCreator {
         scoreBoard.init(redStockpile, whiteStockpile, diceBoard, redStats, whiteStats, graveyard);
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
-        board.getChildren().addAll(border, graveyard, this.trianglesGroup,
-                diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces);
+        startPage.startButton.setOnMouseClicked(event -> {
+            board.getChildren().remove(startPage);
+            board.getChildren().addAll(border, graveyard, this.trianglesGroup,
+                    diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces);
+        });
+        board.getChildren().addAll(startPage);
         board.setStyle("-fx-background-color: #21242E");
         initializeTriangles();
         return board;
