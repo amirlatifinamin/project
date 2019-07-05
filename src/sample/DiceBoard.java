@@ -26,7 +26,7 @@ public class DiceBoard{
     public boolean newDiceRoll;
     private Random randGen = new Random();
     private ScoreBoard scoreBoard;
-    private PieceType currentUser;
+    public static PieceType currentUser;
     private Rectangle turnTile = new Rectangle();
     private Text turnTitle = new Text();
     private boolean firstRoll;

@@ -4,7 +4,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import static sample.Controller.numOfRedKilledPieces;
+import static sample.Controller.numOfWhiteKilledPieces;
+import static sample.DiceBoard.currentUser;
 import static sample.LayoutCreator.triangleBase;
+
 
 public class Piece extends StackPane {
     private Circle piece = new Circle();
@@ -30,7 +34,17 @@ public class Piece extends StackPane {
 
 
         setOnMouseDragged(e -> {
-            relocate(e.getSceneX() + oldX - mouseX, e.getSceneY() + oldY - mouseY);
+            if (currentUser == pieceType) {
+                if (pieceType == PieceType.red) {
+                    if (numOfRedKilledPieces == 0 || isKilled) {
+                        relocate(e.getSceneX() + oldX - mouseX, e.getSceneY() + oldY - mouseY);
+                    }
+                } else {
+                    if (numOfWhiteKilledPieces == 0 || isKilled) {
+                        relocate(e.getSceneX() + oldX - mouseX, e.getSceneY() + oldY - mouseY);
+                    }
+                }
+            }
         });
     }
 
