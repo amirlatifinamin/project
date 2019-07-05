@@ -19,10 +19,12 @@ public class Triangle extends Pane {
     private int numberOfPieces;
     private PieceType typeOfPieces;
     private Graveyard graveyard;
+    private DiceBoard diceBoard;
 
 
-    public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard) {
+    public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard, DiceBoard diceBoard) {
         this.graveyard = graveyard;
+        this.diceBoard = diceBoard;
         this.typeOfPieces = null;
         this.number = number;
         this.controller = controller;
@@ -52,7 +54,8 @@ public class Triangle extends Pane {
             typeOfPieces = PieceType.red;
         }
         for (int index = 0; index < initialNumOfPieces; index++) {
-            Piece piece = controller.makeHandlePiece(x, firstY + index * triangleType.direction * triangleBase, typeOfPieces, number, graveyard);
+            Piece piece = controller.makeHandlePiece(x, firstY + index * triangleType.direction * triangleBase,
+                    typeOfPieces, number, graveyard, diceBoard);
             this.pieces.add(piece);
             pieces.getChildren().addAll(piece);
             numberOfPieces++;
@@ -93,7 +96,6 @@ public class Triangle extends Pane {
         System.out.println(numberOfPieces);
         pieces.remove(pieces.get(0));
         numberOfPieces--;
-//        System.out.println(numberOfPieces);
     }
 
     public void rearrangePieces(){

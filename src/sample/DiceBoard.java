@@ -110,7 +110,7 @@ public class DiceBoard{
         return layout;
     }
 
-    public boolean makeMovement (int val){
+    public boolean canMove (int val){
         if (numOfMovements > 0){
             if (dice1.getDiceValue() == val && !dice1.diceUsed){
                 numOfMovements -= 1;

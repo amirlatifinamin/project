@@ -83,10 +83,10 @@ public class LayoutCreator {
         for (int index = 1; index <= column; index++) {
             int initialNumOfPieces = findInitialNumOfPieces(index);
             Triangle upTriangle = new Triangle((index <= column / 2 ? index : index + 1) * triangleBase, 0.0,
-                    index % 2 == 0 ? TriangleType.upRed : TriangleType.upWhite, this.controller, 12 - index, graveyard);
+                    index % 2 == 0 ? TriangleType.upRed : TriangleType.upWhite, this.controller, 12 - index, graveyard, diceBoard);
             triangles[12 - index] = upTriangle;
             Triangle downTriangle = new Triangle((index <= column / 2 ? index : index + 1) * triangleBase, boardHeight / 2 + triangleBase,
-                    index % 2 == 0 ? TriangleType.downWhite : TriangleType.downRed, this.controller, 11 + index, graveyard);
+                    index % 2 == 0 ? TriangleType.downWhite : TriangleType.downRed, this.controller, 11 + index, graveyard, diceBoard);
             triangles[11 + index] = downTriangle;
             Group upPieces = upTriangle.initializePieces(initialNumOfPieces);
             Group downPieces = downTriangle.initializePieces(initialNumOfPieces);
