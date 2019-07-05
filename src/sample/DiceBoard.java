@@ -7,21 +7,29 @@ import javafx.scene.shape.Rectangle;
 import java.util.Random;
 
 public class DiceBoard{
+    public static final double height = 220;
+    public static final double width = 190;
     public final double X = 215;
     public final double Y = 300;
     public final double arc = 30;
-    public Dice dice1 = new Dice(30,20);
-    public Dice dice2 = new Dice(100,20);
+    public Dice dice1 = new Dice(30,10);
+    public Dice dice2 = new Dice(100,10);
     public Dice dice3 = new Dice(30, 90);
     public Dice dice4 = new Dice(100, 90);
     public DiceController diceController = new DiceController(45, 160, dice1, dice2);
     public Pane layout = new Pane();
     public int numOfMovements;
+    public boolean doubledDice;
+    public boolean newDiceRoll;
     private Random randGen = new Random();
+    private ScoreBoard scoreBoard;
+    private PieceType currentUser;
 
 //    private int numOfRolls = 10;
 
-    public Pane layoutCreator (double x, double y){
+    public Pane layoutCreator (double x, double y, ScoreBoard s){
+        scoreBoard = s;
+        currentUser = PieceType.red;
         layout.relocate(x, y);
         Rectangle rect1 = new Rectangle();
         Rectangle rect2 = new Rectangle();
@@ -30,8 +38,8 @@ public class DiceBoard{
         rect1.setFill(Color.valueOf("#21242E"));
         rect1.relocate(0, 0);
         layout.getChildren().addAll(rect1);
-        rect2.setHeight(230);
-        rect2.setWidth(190);
+        rect2.setHeight(height);
+        rect2.setWidth(width);
         rect2.smoothProperty().setValue(true);
         rect2.setFill(Color.valueOf("#A36525"));
         rect2.relocate(0, 0);
@@ -66,16 +74,26 @@ public class DiceBoard{
             dice1.rollDice();
             dice2.rollDice();
             numOfMovements = 2;
+            doubledDice = false;
+            newDiceRoll = true;
             if (dice1.getDiceValue() == dice2.getDiceValue()){
                 dice3.setDiceSide(dice1.getDiceValue());
                 dice4.setDiceSide(dice1.getDiceValue());
                 layout.getChildren().addAll(dice3, dice4);
                 numOfMovements = 4;
+                doubledDice = true;
+            }
+            scoreBoard.updateScores(currentUser);
+            if (currentUser == PieceType.red){
+                currentUser = PieceType.white;
+            } else {
+                currentUser = PieceType.red;
             }
         });
         layout.getChildren().addAll(dice1, dice2, diceController, dice4Shadow, dice3Shadow);
         layout.setPrefSize(400,350);
         numOfMovements = 0;
+        doubledDice = false;
         // Movement test key
 //        Rectangle testMove = new Rectangle();
 //        testMove.setWidth(100);
@@ -116,7 +134,14 @@ public class DiceBoard{
     }
 
     public int getSumValueOfDices (){
-        return dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue();
+        if (newDiceRoll) {
+            newDiceRoll = false;
+            if (doubledDice)
+                return dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue();
+            else
+                return dice1.getDiceValue() + dice2.getDiceValue();
+        } else
+            return 0;
     }
 
 }
