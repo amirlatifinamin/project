@@ -76,6 +76,14 @@ public class Graveyard extends Pane {
 
     }
 
+    public void changePieceColor(PieceType pieceType){
+        for(int index=0; index<pieces.size(); index++){
+            if(pieces.get(index).getPieceType() == pieceType){
+                pieces.get(index).changeColor();
+            }
+        }
+    }
+
     public int getSumOfRedKilled() {
         return sumOfRedKilled;
     }

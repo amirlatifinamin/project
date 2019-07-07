@@ -3,7 +3,7 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
+import static sample.LayoutCreator.controller;
 
 import java.util.Random;
 
@@ -49,8 +49,15 @@ public class Dice extends Pane {
     }
 
     public int getDiceValue (){
-        return currentSide + 1;
+        if(diceUsed){
+            return 0;
+        }
+        else{
+            return currentSide + 1;
+        }
     }
+
+
 
     public void setDiceSide(int val){
         getChildren().remove(diceSides[currentSide]);

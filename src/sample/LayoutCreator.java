@@ -17,21 +17,21 @@ public class LayoutCreator {
     public static double boardHeight = 12 * triangleBase;
     public static double controlPanelX = boardWidth - ControlPanel.width;
     public static double controlPanelY = triangleBase / 2;
-    private final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2 - ControlPanel.width;
-    private final double scoreboardY = triangleBase / 2;
+    public static final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2 - ControlPanel.width;
+    public static final double scoreboardY = triangleBase / 2;
     private final double diceBoardX = scoreboardX;
     private final double diceBoardY = scoreboardY + ScoreBoard.scoreBoardHeight + triangleBase / 3;
 //    public static final double stockpileX = boardWidth - ScoreBoard.scoreBoardWidth - stockpileWidth;
     public static final double stockpileX = 15*triangleBase;
     public static final double redStockpileY = triangleBase / 2;
     public static final double whiteStockPileY = redStockpileY + stockpileHeight + triangleBase;
-    private ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY);
+    public static ScoreBoard scoreBoard = new ScoreBoard(scoreboardX, scoreboardY);
     private Group trianglesGroup = new Group();
     public static Group pieces = new Group();
     private DiceBoard diceBoard = new DiceBoard();
-    private Graveyard graveyard = new Graveyard(scoreBoard);
+    public static Graveyard graveyard = new Graveyard(scoreBoard);
     private Border border = new Border();
-    private Controller controller;
+    public static Controller controller;
     public static Triangle[] triangles = new Triangle[row * column];
     private Stockpile redStockpile = new Stockpile(stockpileX, redStockpileY, PieceType.red, scoreBoard);
     private Stockpile whiteStockpile = new Stockpile(stockpileX, whiteStockPileY, PieceType.white, scoreBoard);
@@ -43,7 +43,7 @@ public class LayoutCreator {
     private Rectangle pausePage;
 
     public LayoutCreator() {
-        this.controller = new Controller(graveyard, diceBoard, redStockpile, whiteStockpile);
+        controller = new Controller(graveyard, diceBoard, redStockpile, whiteStockpile);
     }
 
 
@@ -138,6 +138,7 @@ public class LayoutCreator {
         whiteStockpile.reset();
         redStats.reset();
         whiteStats.reset();
+//        resetPieces();
     }
 
     private Rectangle rectangleInit (double x, double y,double width, double height, String color) {
@@ -147,6 +148,13 @@ public class LayoutCreator {
         temp.setHeight(height);
         temp.setFill(Color.valueOf(color));
         return temp;
+    }
+
+    private void resetPieces(){
+        this.trianglesGroup.getChildren().removeAll();
+        pieces.getChildren().removeAll();
+        System.out.println("salam");
+        this.initializeTriangles();
     }
 
 

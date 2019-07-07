@@ -23,6 +23,7 @@ public class Triangle extends Pane {
     private Stockpile redStockPile;
     private Stockpile whiteStockPile;
     private Group piecesGroup;
+    private String initialColor;
 
 
     public Triangle(double x, double y, TriangleType type, Controller controller, int number, Graveyard graveyard,
@@ -45,8 +46,9 @@ public class Triangle extends Pane {
         } else {
             triangle.getPoints().addAll(0.0, 5 * triangleBase, triangleBase, 5 * triangleBase, triangleBase / 2, 0.0);
         }
-        triangle.setFill((type == TriangleType.downRed || type == TriangleType.upRed) ?
-                Color.valueOf("#410B00") : Color.valueOf("#707070"));
+        this.initialColor = (type == TriangleType.downRed || type == TriangleType.upRed) ?
+                "#410B00" : "#707070";
+        triangle.setFill(Color.valueOf(this.initialColor));
         getChildren().addAll(triangle);
 
     }
@@ -115,6 +117,27 @@ public class Triangle extends Pane {
             }
         }
 
+    }
+
+    public void changeColor(PieceType pieceType){
+        if(pieceType == typeOfPieces || typeOfPieces==null || numberOfPieces==1){
+            triangle.setFill(Color.valueOf("#28A11B"));
+        }
+    }
+
+    public void changeFirstPieceColor(){
+        pieces.get(pieces.size()-1).changeColor();
+    }
+
+    public void resetFirstPieceColor(){
+        pieces.get(pieces.size()-1).resetColor();
+        if(numberOfPieces > 1){
+            pieces.get(pieces.size()-2).resetColor();
+        }
+    }
+
+    public void resetColor(){
+        triangle.setFill(Color.valueOf(this.initialColor));
     }
 
     public PieceType getTypeOfPieces() {

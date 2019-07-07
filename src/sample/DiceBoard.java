@@ -1,4 +1,5 @@
 package sample;
+import static sample.LayoutCreator.controller;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -8,15 +9,15 @@ import javafx.scene.text.Text;
 
 import java.util.Random;
 
-public class DiceBoard{
+public class DiceBoard {
     public static final double height = 220;
     public static final double width = ScoreBoard.scoreBoardWidth;
     private static double fontSize = 20;
     public final double X = 215;
     public final double Y = 300;
     public final double arc = 30;
-    public Dice dice1 = new Dice(30,10);
-    public Dice dice2 = new Dice(100,10);
+    public Dice dice1 = new Dice(30, 10);
+    public Dice dice2 = new Dice(100, 10);
     public Dice dice3 = new Dice(30, 90);
     public Dice dice4 = new Dice(100, 90);
     public DiceController diceController = new DiceController(45, 160, dice1, dice2);
@@ -39,10 +40,9 @@ public class DiceBoard{
     private Rectangle dice4Shadow = new Rectangle();
 
 
-
 //    private int numOfRolls = 10;
 
-    public Pane layoutCreator (double x, double y, ScoreBoard s){
+    public Pane layoutCreator(double x, double y, ScoreBoard s) {
         scoreBoard = s;
         currentUser = PieceType.red;
         xLoc = x;
@@ -52,17 +52,17 @@ public class DiceBoard{
         layout.getChildren().addAll(rect1);
         layout.getChildren().addAll(rect2);
         diceController.setOnMouseClicked(event -> {
-            if (firstRoll){
+            if (firstRoll) {
                 dice1.rollDice();
                 dice2.rollDice();
-                if (dice1.getDiceValue() > dice2.getDiceValue()){
+                if (dice1.getDiceValue() > dice2.getDiceValue()) {
                     currentUser = PieceType.red;
                     dice1.newDice();
                     dice2.newDice();
                     turnTile.setFill(Color.valueOf("#770000"));
                     firstRoll = false;
                     canRollDice = true;
-                } else if (dice1.getDiceValue() < dice2.getDiceValue()){
+                } else if (dice1.getDiceValue() < dice2.getDiceValue()) {
                     currentUser = PieceType.white;
                     dice1.newDice();
                     dice2.newDice();
@@ -96,10 +96,11 @@ public class DiceBoard{
                     doubledDice = true;
                 }
                 scoreBoard.updateScores(currentUser);
+                controller.findMovablePieces();
             }
         });
         layout.getChildren().addAll(dice1, dice2, diceController, dice4Shadow, dice3Shadow);
-        layout.setPrefSize(400,350);
+        layout.setPrefSize(400, 350);
         layout.getChildren().addAll(turnTile);
         layout.getChildren().addAll(turnTitle);
         // Movement test key
@@ -118,7 +119,7 @@ public class DiceBoard{
         return layout;
     }
 
-    private void createBoard(){
+    private void createBoard() {
         rect1.setHeight(Y);
         rect1.setWidth(X);
         rect1.setFill(Color.valueOf("#21242E"));
@@ -146,7 +147,7 @@ public class DiceBoard{
         dice4Shadow.setHeight(60);
         numOfMovements = 0;
         doubledDice = false;
-        turnTitle.relocate(200,20);
+        turnTitle.relocate(200, 20);
         turnTitle.setText("Turn");
         turnTitle.setFont(Font.font(fontSize));
         turnTitle.setFill(Color.valueOf("#000000"));
@@ -163,9 +164,9 @@ public class DiceBoard{
         canRollDice = false;
     }
 
-    public boolean canMove (int val){
-        if (numOfMovements == 4)  {
-            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() == val){
+    public boolean canMove(int val) {
+        if (numOfMovements == 4) {
+            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() == val) {
                 numOfMovements = 0;
                 changeTurn();
                 dice1.useDice();
@@ -173,7 +174,7 @@ public class DiceBoard{
                 dice3.useDice();
                 dice4.useDice();
                 return true;
-            } else if (dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue()  == val) {
+            } else if (dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() == val) {
                 numOfMovements = 1;
                 dice2.useDice();
                 dice3.useDice();
@@ -184,13 +185,13 @@ public class DiceBoard{
                 dice3.useDice();
                 dice4.useDice();
                 return true;
-            } else if (dice4.getDiceValue() == val){
+            } else if (dice4.getDiceValue() == val) {
                 numOfMovements = 3;
                 dice4.useDice();
                 return true;
             }
-        } else if (numOfMovements == 3){
-            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() == val){
+        } else if (numOfMovements == 3) {
+            if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() == val) {
                 numOfMovements = 0;
                 changeTurn();
                 dice1.useDice();
@@ -207,16 +208,16 @@ public class DiceBoard{
                 dice3.useDice();
                 return true;
             }
-        }else if (numOfMovements > 0){
-            if (numOfMovements == 2 && dice1.getDiceValue() + dice2.getDiceValue() == val){
+        } else if (numOfMovements > 0) {
+            if (numOfMovements == 2 && dice1.getDiceValue() + dice2.getDiceValue() == val) {
                 numOfMovements = 0;
                 changeTurn();
                 dice1.useDice();
                 dice2.useDice();
                 return true;
-            } else if (dice1.getDiceValue() == val && !dice1.diceUsed){
+            } else if (dice1.getDiceValue() == val && !dice1.diceUsed) {
                 numOfMovements -= 1;
-                if (numOfMovements == 0){
+                if (numOfMovements == 0) {
                     changeTurn();
                 }
                 dice1.useDice();
@@ -224,7 +225,7 @@ public class DiceBoard{
                 return true;
             } else if (dice2.getDiceValue() == val && !dice2.diceUsed) {
                 numOfMovements -= 1;
-                if (numOfMovements == 0){
+                if (numOfMovements == 0) {
                     changeTurn();
                 }
                 dice2.useDice();
@@ -232,7 +233,7 @@ public class DiceBoard{
                 return true;
             } else if (dice3.getDiceValue() == val && !dice3.diceUsed) {
                 numOfMovements -= 1;
-                if (numOfMovements == 0){
+                if (numOfMovements == 0) {
                     changeTurn();
                 }
                 dice3.useDice();
@@ -240,7 +241,7 @@ public class DiceBoard{
                 return true;
             } else if (dice4.getDiceValue() == val && !dice4.diceUsed) {
                 numOfMovements -= 1;
-                if (numOfMovements == 0){
+                if (numOfMovements == 0) {
                     changeTurn();
                 }
                 dice4.useDice();
@@ -251,7 +252,7 @@ public class DiceBoard{
         return false;
     }
 
-    public int getSumValueOfDices (){
+    public int getSumValueOfDices() {
         if (newDiceRoll) {
             newDiceRoll = false;
             if (doubledDice)
@@ -266,7 +267,11 @@ public class DiceBoard{
         return currentUser;
     }
 
-    public void changeTurn (){
+    public void changeTurn() {
+        dice1.useDice();
+        dice2.useDice();
+        dice3.useDice();
+        dice4.useDice();
         if (currentUser == PieceType.red) {
             currentUser = PieceType.white;
             turnTile.setFill(Color.valueOf("#F2CE7C"));
@@ -278,7 +283,7 @@ public class DiceBoard{
         diceController.unlockKey();
     }
 
-    public void reset (){
+    public void reset() {
         createBoard();
         dice1.setDiceSide(1);
         dice2.setDiceSide(1);
@@ -290,5 +295,17 @@ public class DiceBoard{
 
         }
 
+    }
+
+    public int[] getDiceValues() {
+        int[] diceValues = new int[6];
+        diceValues[0] = dice1.getDiceValue();
+        diceValues[1] = dice2.getDiceValue();
+        diceValues[2] = dice1.getDiceValue() + dice2.getDiceValue();
+        diceValues[3] = numOfMovements == 3 ? dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() : 0;
+        diceValues[4] = numOfMovements == 4 ? dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() : 0;
+        diceValues[5] = numOfMovements == 4 ?
+                dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() : 0;
+        return diceValues;
     }
 }

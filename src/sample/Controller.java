@@ -3,7 +3,11 @@ package sample;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 
+import java.util.ArrayList;
+
 import static sample.LayoutCreator.*;
+import static sample.DiceBoard.currentUser;
+import static sample.LayoutCreator.graveyard;
 
 
 public class Controller {
@@ -18,6 +22,7 @@ public class Controller {
     private Stockpile whiteStockPile;
     public static int numOfRedKilledPieces = 0;
     public static int numOfWhiteKilledPieces = 0;
+    private ArrayList<Triangle> coloredTriangles = new ArrayList<>();
 
     public Controller(Graveyard graveyard,
                       DiceBoard diceBoard, Stockpile redStockPile, Stockpile whiteStockPile) {
@@ -31,7 +36,7 @@ public class Controller {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Game Finished");
         alert.setHeaderText("The game is finished");
-        Piece piece = new Piece(x, y, pieceType, number);
+        Piece piece = new Piece(x, y, pieceType, number, this);
         piece.setOnMouseReleased(e -> {
             int distance;
             int oldPlace = piece.getPlaceNumber();
@@ -42,6 +47,7 @@ public class Controller {
             int newTriangleNumber = findTriangleNumber(newXPosition, newYPosition);
             distance = findDistance(piece, newTriangleNumber, newXPosition, newYPosition);
 
+            resetTriangleColors();
 
             MoveType moveType = findMoveType(newXPosition, newYPosition, newTriangleNumber, piece, distance, diceBoard);
 
@@ -61,13 +67,14 @@ public class Controller {
                         } else {
                             numOfWhiteKilledPieces--;
                         }
-                        System.out.println(numOfRedKilledPieces);
                     } else {
                         triangles[oldTriangleNumber].removePiece(piece);
                     }
                     piece.setPlaceNumber(triangles[newTriangleNumber].getNumber());
                     updateNumOfPiecesInBase(piece, oldPlace, false);
                     piece.move(newXPosition, newYPosition);
+                    piece.resetColor();
+                    findMovablePieces();
                     break;
                 }
                 case Kill: {
@@ -93,7 +100,6 @@ public class Controller {
                         } else {
                             numOfWhiteKilledPieces--;
                         }
-                        System.out.println(numOfRedKilledPieces);
 
                     } else {
                         triangles[oldTriangleNumber].removePiece(piece);
@@ -101,6 +107,8 @@ public class Controller {
                     piece.setPlaceNumber(triangles[newTriangleNumber].getNumber());
                     updateNumOfPiecesInBase(piece, oldPlace, false);
                     piece.move(newXPosition, newYPosition);
+                    piece.resetColor();
+                    findMovablePieces();
                     break;
                 }
                 case StockPile: {
@@ -156,7 +164,6 @@ public class Controller {
         }
 
         if (isInRedStockPileArea(newXPosition, newYPosition)) {
-            System.out.println(distance);
             if (piece.getPieceType() == PieceType.red && numOfRedPiecesInBase == 15 && diceBoard.canMove(Math.abs(distance))) {
                 return MoveType.StockPile;
             } else {
@@ -238,7 +245,7 @@ public class Controller {
                 (newYPosition < 0) ||
                 (newXPosition < triangleBase) ||
                 (newXPosition >= 14 * triangleBase) ||
-                (newXPosition < 8 * triangleBase && newXPosition > 7 * triangleBase) ||
+                (newXPosition < 8 * triangleBase && newXPosition >= 7 * triangleBase) ||
                 (newXPosition == piece.getOldX())) {
             distance = 0;
         } else {
@@ -247,5 +254,74 @@ public class Controller {
         }
         return distance;
     }
+
+    public void findPossibleMoves(int placeNumber, PieceType pieceType){
+        int[] possibleMoves = diceBoard.getDiceValues();
+        for(int index=0; index<6; index++){
+            int newPlace = placeNumber+possibleMoves[index]*pieceType.moveDirection;
+            if((newPlace != placeNumber) && newPlace < 24 && newPlace > -1){
+                triangles[newPlace].changeColor(pieceType);
+                coloredTriangles.add(triangles[newPlace]);
+            }
+        }
+    }
+
+
+    public void findMovablePieces(){
+        int numOfPossibleMoves = 0;
+        System.out.println("salam");
+        int[] possibleMoves = diceBoard.getDiceValues();
+        for(int triangle_index = 0; triangle_index<24; triangle_index++){
+            if(triangles[triangle_index].getNumberOfPieces() > 0){
+                triangles[triangle_index].resetFirstPieceColor();
+            }
+            if(triangles[triangle_index].getTypeOfPieces() == currentUser){
+                int placeNumber = triangles[triangle_index].getNumber();
+                for(int dice_index=0; dice_index<6; dice_index++){
+                    int newPlace = placeNumber+possibleMoves[dice_index]*triangles[triangle_index].getTypeOfPieces().moveDirection;
+                    if((newPlace != placeNumber) && newPlace < 24 && newPlace > -1 &&
+                            (triangles[newPlace].getTypeOfPieces() == triangles[triangle_index].getTypeOfPieces()
+                                    || triangles[newPlace].getTypeOfPieces() == null
+                                    || triangles[newPlace].getNumberOfPieces() == 1)){
+                        if(triangles[triangle_index].getTypeOfPieces() == PieceType.red && currentUser==PieceType.red){
+                            if(numOfRedKilledPieces==0){
+                                triangles[triangle_index].changeFirstPieceColor();
+                                numOfPossibleMoves++;
+                            }else {
+                                graveyard.changePieceColor(PieceType.red);
+                                numOfPossibleMoves++;
+                            }
+                        }else if(triangles[triangle_index].getTypeOfPieces() == PieceType.white && currentUser==PieceType.white){
+                            if(numOfWhiteKilledPieces==0){
+                                triangles[triangle_index].changeFirstPieceColor();
+                                numOfPossibleMoves++;
+                            }else {
+                                graveyard.changePieceColor(PieceType.white);
+                                numOfPossibleMoves++;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        if(numOfPossibleMoves == 0 && (possibleMoves[0]>0 || possibleMoves[1]>0)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Available Move");
+            alert.setHeaderText("You have no available move");
+            alert.show();
+            diceBoard.changeTurn();
+        }
+    }
+
+
+    public void resetTriangleColors(){
+        for(int index=0; index<coloredTriangles.size(); index++) {
+            coloredTriangles.get(index).resetColor();
+        }
+        coloredTriangles.clear();
+    }
+
+
 }
 

@@ -18,8 +18,9 @@ public class Piece extends StackPane {
     private PieceType pieceType;
     private int placeNumber;
     private boolean isKilled = false;
+    private String borderInitialColor;
 
-    public Piece(double x, double y, PieceType pieceType, int placeNumber) {
+    public Piece(double x, double y, PieceType pieceType, int placeNumber, Controller controller) {
         this.placeNumber = placeNumber;
         piece.setRadius(triangleBase / 2);
         border.setRadius(triangleBase / 2 + 2);
@@ -30,6 +31,14 @@ public class Piece extends StackPane {
         setOnMousePressed(e -> {
             mouseX = e.getSceneX();
             mouseY = e.getSceneY();
+            if (currentUser == pieceType){
+                if(pieceType == PieceType.red && (numOfRedKilledPieces==0 || isKilled)){
+                    controller.findPossibleMoves(this.placeNumber, pieceType);
+                }
+                if(pieceType == PieceType.white && (numOfWhiteKilledPieces==0 || isKilled)){
+                    controller.findPossibleMoves(this.placeNumber, pieceType);
+                }
+            }
         });
 
 
@@ -52,6 +61,14 @@ public class Piece extends StackPane {
         oldX = x;
         oldY = y;
         relocate(oldX, oldY);
+    }
+
+    public void changeColor(){
+        border.setFill(pieceType==PieceType.white? Color.valueOf("#F71900"): Color.valueOf("#35A14A"));
+    }
+
+    public void resetColor(){
+        border.setFill(Color.valueOf("#000000"));
     }
 
     public void abortMove() {
