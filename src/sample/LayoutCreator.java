@@ -38,9 +38,10 @@ public class LayoutCreator {
     private UserStatistics redStats = new UserStatistics(PieceType.red);
     private UserStatistics whiteStats = new UserStatistics(PieceType.white);
     private StartPage startPage = new StartPage();
-    private Pane board = new Pane();
+    public static Pane board = new Pane();
     private ControlPanel controlPanel = new ControlPanel(controlPanelX, controlPanelY);
-    private Rectangle pausePage;
+    private static Rectangle pausePage;
+    public TimerClass timer = new TimerClass();
 
     public LayoutCreator() {
         controller = new Controller(graveyard, diceBoard, redStockpile, whiteStockpile);
@@ -53,18 +54,22 @@ public class LayoutCreator {
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
         startPage.startButton.setOnMouseClicked(event -> {
+            startPage.startGame();
             board.getChildren().remove(startPage);
             board.getChildren().addAll(border, graveyard, this.trianglesGroup,
                     diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces, controlPanel);
+            timer.start(startPage.getRoundDuration() * 60);
         });
         controlPanel.restartButton.setOnMouseClicked(event -> {
             this.reset();
+            timer.reset = true;
         });
         controlPanel.pauseButton.setOnMouseClicked(event -> {
             if (controlPanel.pauseButton.isActive()){
                 board.getChildren().addAll(pausePage);
                 controlPanel.pauseButton.deactiveButton();
                 controlPanel.resumeButton.activeButton();
+                timer.pause = true;
             }
         });
         controlPanel.resumeButton.setOnMouseClicked(event -> {
@@ -72,6 +77,21 @@ public class LayoutCreator {
                 board.getChildren().remove(pausePage);
                 controlPanel.resumeButton.deactiveButton();
                 controlPanel.pauseButton.activeButton();
+                timer.pause = false;
+            }
+        });
+        controlPanel.timer.setOnMouseClicked(event -> {
+            if (controlPanel.timer.isActive()){
+                controlPanel.pauseButton.activeButton();
+                controlPanel.timer.deactiveButton();
+                try {
+                    timer.timer1.cancel();
+                } catch (Error e){
+
+                }
+                timer = new TimerClass();
+                timer.start(startPage.getRoundDuration() * 60);
+                ControlPanel.finished = false;
             }
         });
         board.getChildren().addAll(startPage);
@@ -140,6 +160,14 @@ public class LayoutCreator {
         whiteStockpile.reset();
         redStats.reset();
         whiteStats.reset();
+        ControlPanel.finished = false;
+        try {
+            timer.timer1.cancel();
+        } catch (Error e){
+
+        }
+        timer = new TimerClass();
+        timer.start(startPage.getRoundDuration() * 60);
         board.getChildren().addAll(graveyard, this.trianglesGroup, pieces);
     }
 
@@ -159,5 +187,11 @@ public class LayoutCreator {
         this.initializeTriangles();
     }
 
+    public static Pane getBoard(){
+        return board;
+    }
 
+    public static Rectangle getPausePage(){
+        return pausePage;
+    }
 }

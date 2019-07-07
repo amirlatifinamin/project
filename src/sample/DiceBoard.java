@@ -52,6 +52,10 @@ public class DiceBoard {
 //        layout.getChildren().addAll(rect1);
         layout.getChildren().addAll(rect2);
         diceController.setOnMouseClicked(event -> {
+            if (ControlPanel.finished) {
+                diceController.lockkey();
+                return;
+            }
             if (firstRoll) {
                 dice1.rollDice();
                 dice2.rollDice();
@@ -165,6 +169,9 @@ public class DiceBoard {
     }
 
     public boolean canMove(int val) {
+        if (ControlPanel.finished){
+            return false;
+        }
         if (numOfMovements == 4) {
             if (dice1.getDiceValue() + dice2.getDiceValue() + dice3.getDiceValue() + dice4.getDiceValue() == val) {
                 numOfMovements = 0;

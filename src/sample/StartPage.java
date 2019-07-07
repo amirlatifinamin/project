@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.awt.*;
 import java.io.FileOutputStream;
 
 public class StartPage extends Pane {
@@ -30,8 +31,8 @@ public class StartPage extends Pane {
     public Text numOfWinsLabel ;
     public TextField playerTimeField ;
     public Text playerTimeLabel ;
-    private double roundDuration; //min
-    private double turnDuration; //sec
+    private int roundDuration; //min
+    private int turnDuration; //sec
     private int numOfWins;
 
     public StartPage (){
@@ -57,11 +58,27 @@ public class StartPage extends Pane {
     public void startGame (){
         String temp;
         temp = gameDurationField.getText();
-        roundDuration = Double.valueOf(temp);
+        if (temp != "")
+            System.out.println(temp);
+            try {
+                roundDuration = Integer.valueOf(temp);
+            } catch (NumberFormatException e){
+
+            }
         temp = playerTimeField.getText();
-        turnDuration = Double.valueOf(temp);
+        if (temp != "")
+            try {
+                turnDuration = Integer.valueOf(temp);
+            } catch (NumberFormatException e){
+
+            }
         temp = numOfWinsField.getText();
-        numOfWins = Integer.valueOf(temp);
+        if (temp != "")
+            try {
+                numOfWins = Integer.valueOf(temp);
+            } catch (NumberFormatException e){
+
+            }
     }
 
     private Rectangle rectangleInit (double x, double y, double width, double height, String color) {
@@ -100,4 +117,7 @@ public class StartPage extends Pane {
         return temp;
     }
 
+    public int getRoundDuration() {
+        return roundDuration;
+    }
 }
