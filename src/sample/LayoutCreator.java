@@ -128,6 +128,8 @@ public class LayoutCreator {
     }
 
     private void reset () {
+        board.getChildren().removeAll(graveyard, this.trianglesGroup, pieces);
+        graveyard = new Graveyard(scoreBoard);
         pieces = new Group();
         trianglesGroup = new Group();
         triangles = new Triangle[row * column];
@@ -138,6 +140,7 @@ public class LayoutCreator {
         whiteStockpile.reset();
         redStats.reset();
         whiteStats.reset();
+        board.getChildren().addAll(graveyard, this.trianglesGroup, pieces);
     }
 
     private Rectangle rectangleInit (double x, double y,double width, double height, String color) {
