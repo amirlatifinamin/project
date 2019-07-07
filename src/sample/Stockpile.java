@@ -25,7 +25,7 @@ public class Stockpile extends Pane {
     private Rectangle[] pieces = new Rectangle[numOfPieces];
     private ScoreBoard scoreBoard;
     // Test
-    private Rectangle key;
+//    private Rectangle key;
 
     public Stockpile(double x, double y, PieceType t, ScoreBoard s){
         scoreBoard = s;
@@ -38,8 +38,7 @@ public class Stockpile extends Pane {
         }
         pile = rectangleInit(pileX, pileY, pileWidth, pileHeight, "#1b0069");
         pileBoarder = rectangleInit(0, 0, pileWidth + 2 * boarderWidth, pileHeight + 2 * boarderWidth, "#000000");
-        getChildren().addAll(pileBoarder);
-        getChildren().addAll(pile);
+
         currentPieceY  = 2 * boarderWidth;
         currentPieceX = 2 * boarderWidth;
         for (int pieceNum = 0; pieceNum < numOfPieces; pieceNum += 1){
@@ -47,10 +46,12 @@ public class Stockpile extends Pane {
             currentPieceY += pieceHeight + boarderWidth;
         }
         numOfPiecesInPile = 0;
-        key = rectangleInit(100, 0, 100, 50, "#1155DC");
-        key.setOnMouseClicked(event -> {
-            this.addPieceToPile();
-        });
+//        key = rectangleInit(100, 0, 100, 50, "#1155DC");
+//        key.setOnMouseClicked(event -> {
+//            this.addPieceToPile();
+//        });
+        getChildren().addAll(pileBoarder);
+        getChildren().addAll(pile);
         //getChildren().addAll(key);
     }
 
@@ -73,6 +74,13 @@ public class Stockpile extends Pane {
         getChildren().addAll(pieces[numOfPiecesInPile]);
         numOfPiecesInPile += 1;
         scoreBoard.updateScores(type);
+    }
+
+    public void reset(){
+        for(int pieceNum = 0; pieceNum < numOfPiecesInPile; pieceNum++){
+            getChildren().remove(pieces[pieceNum]);
+        }
+        numOfPiecesInPile = 0;
     }
 
 }

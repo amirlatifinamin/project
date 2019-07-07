@@ -52,4 +52,12 @@ public class UserStatistics {
     public int getSumOfDicesValue() {
         return sumOfDicesValue;
     }
+
+    public void reset(){
+        numOfFailures = 0;
+        numOfKilledPieces = 0;
+        numOfWins = 0;
+        numOfPiecesInPile = 0;
+        sumOfDicesValue = 0;
+    }
 }

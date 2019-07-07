@@ -2,6 +2,8 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class LayoutCreator {
     public static int row = 2;
@@ -11,9 +13,11 @@ public class LayoutCreator {
     private final double diceBoardHeight = DiceBoard.height;
     public static final double stockpileWidth = Stockpile.pileWidth + triangleBase;
     public static final double stockpileHeight = Stockpile.pileHeight;
-    public static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
+    public static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth + ControlPanel.width;
     public static double boardHeight = 12 * triangleBase;
-    private final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2;
+    public static double controlPanelX = boardWidth - ControlPanel.width;
+    public static double controlPanelY = triangleBase / 2;
+    private final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2 - ControlPanel.width;
     private final double scoreboardY = triangleBase / 2;
     private final double diceBoardX = scoreboardX;
     private final double diceBoardY = scoreboardY + ScoreBoard.scoreBoardHeight + triangleBase / 3;
@@ -34,7 +38,9 @@ public class LayoutCreator {
     private UserStatistics redStats = new UserStatistics(PieceType.red);
     private UserStatistics whiteStats = new UserStatistics(PieceType.white);
     private StartPage startPage = new StartPage();
-
+    private Pane board = new Pane();
+    private ControlPanel controlPanel = new ControlPanel(controlPanelX, controlPanelY);
+    private Rectangle pausePage;
 
     public LayoutCreator() {
         this.controller = new Controller(graveyard, diceBoard, redStockpile, whiteStockpile);
@@ -42,14 +48,31 @@ public class LayoutCreator {
 
 
     public Pane layout() {
-        Pane board = new Pane();
+        pausePage = rectangleInit(0,0, controlPanelX, boardHeight, "#21242E");
         scoreBoard.init(redStockpile, whiteStockpile, diceBoard, redStats, whiteStats, graveyard);
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
         startPage.startButton.setOnMouseClicked(event -> {
             board.getChildren().remove(startPage);
             board.getChildren().addAll(border, graveyard, this.trianglesGroup,
-                    diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces);
+                    diceBoardPane, redStockpile, whiteStockpile, scoreBoard, pieces, controlPanel);
+        });
+        controlPanel.restartButton.setOnMouseClicked(event -> {
+            this.reset();
+        });
+        controlPanel.pauseButton.setOnMouseClicked(event -> {
+            if (controlPanel.pauseButton.isActive()){
+                board.getChildren().addAll(pausePage);
+                controlPanel.pauseButton.deactiveButton();
+                controlPanel.resumeButton.activeButton();
+            }
+        });
+        controlPanel.resumeButton.setOnMouseClicked(event -> {
+            if (controlPanel.resumeButton.isActive()){
+                board.getChildren().remove(pausePage);
+                controlPanel.resumeButton.deactiveButton();
+                controlPanel.pauseButton.activeButton();
+            }
         });
         board.getChildren().addAll(startPage);
         board.setStyle("-fx-background-color: #21242E");
@@ -103,5 +126,28 @@ public class LayoutCreator {
 
         }
     }
+
+    private void reset () {
+        pieces = new Group();
+        trianglesGroup = new Group();
+        triangles = new Triangle[row * column];
+        initializeTriangles();
+        scoreBoard.reset();
+        diceBoard.reset();
+        redStockpile.reset();
+        whiteStockpile.reset();
+        redStats.reset();
+        whiteStats.reset();
+    }
+
+    private Rectangle rectangleInit (double x, double y,double width, double height, String color) {
+        Rectangle temp = new Rectangle();
+        temp.relocate(x, y);
+        temp.setWidth(width);
+        temp.setHeight(height);
+        temp.setFill(Color.valueOf(color));
+        return temp;
+    }
+
 
 }

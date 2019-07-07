@@ -31,42 +31,26 @@ public class DiceBoard{
     private Text turnTitle = new Text();
     private boolean firstRoll;
     private boolean canRollDice;
+    private double xLoc;
+    private double yLoc;
+    private Rectangle rect1 = new Rectangle();
+    private Rectangle rect2 = new Rectangle();
+    private Rectangle dice3Shadow = new Rectangle();
+    private Rectangle dice4Shadow = new Rectangle();
+
+
 
 //    private int numOfRolls = 10;
 
     public Pane layoutCreator (double x, double y, ScoreBoard s){
         scoreBoard = s;
         currentUser = PieceType.red;
+        xLoc = x;
+        yLoc = y;
         layout.relocate(x, y);
-        Rectangle rect1 = new Rectangle();
-        Rectangle rect2 = new Rectangle();
-        rect1.setHeight(Y);
-        rect1.setWidth(X);
-        rect1.setFill(Color.valueOf("#21242E"));
-        rect1.relocate(0, 0);
+        createBoard();
         layout.getChildren().addAll(rect1);
-        rect2.setHeight(height);
-        rect2.setWidth(width);
-        rect2.smoothProperty().setValue(true);
-        rect2.setFill(Color.valueOf("#A36525"));
-        rect2.relocate(0, 0);
-        rect2.setArcWidth(arc);
-        rect2.setArcHeight(arc);
         layout.getChildren().addAll(rect2);
-        Rectangle dice3Shadow = new Rectangle();
-        Rectangle dice4Shadow = new Rectangle();
-        dice3Shadow.relocate(30, 90);
-        dice4Shadow.relocate(100, 90);
-        dice3Shadow.setFill(Color.valueOf("#5d2f00"));
-        dice4Shadow.setFill(Color.valueOf("#5d2f00"));
-        dice3Shadow.setArcHeight(20);
-        dice3Shadow.setArcWidth(20);
-        dice4Shadow.setArcWidth(20);
-        dice4Shadow.setArcHeight(20);
-        dice3Shadow.setHeight(60);
-        dice3Shadow.setWidth(60);
-        dice4Shadow.setWidth(60);
-        dice4Shadow.setHeight(60);
         diceController.setOnMouseClicked(event -> {
             if (firstRoll){
                 dice1.rollDice();
@@ -116,24 +100,8 @@ public class DiceBoard{
         });
         layout.getChildren().addAll(dice1, dice2, diceController, dice4Shadow, dice3Shadow);
         layout.setPrefSize(400,350);
-        numOfMovements = 0;
-        doubledDice = false;
-        turnTitle.relocate(200,20);
-        turnTitle.setText("Turn");
-        turnTitle.setFont(Font.font(fontSize));
-        turnTitle.setFill(Color.valueOf("#000000"));
-        layout.getChildren().addAll(turnTitle);
-        turnTile.relocate(170, 60);
-        turnTile.setHeight(150);
-        turnTile.setWidth(110);
-        turnTile.setArcHeight(20);
-        turnTile.setArcWidth(20);
-        turnTile.setFill(Color.valueOf("#000000"));
         layout.getChildren().addAll(turnTile);
-        firstRoll = true;
-        dice1.firstRollDice(PieceType.red);
-        dice2.firstRollDice(PieceType.white);
-        canRollDice = false;
+        layout.getChildren().addAll(turnTitle);
         // Movement test key
 //        Rectangle testMove = new Rectangle();
 //        testMove.setWidth(100);
@@ -148,6 +116,51 @@ public class DiceBoard{
 //        });
 //        layout.getChildren().addAll(testMove);
         return layout;
+    }
+
+    private void createBoard(){
+        rect1.setHeight(Y);
+        rect1.setWidth(X);
+        rect1.setFill(Color.valueOf("#21242E"));
+        rect1.relocate(0, 0);
+
+        rect2.setHeight(height);
+        rect2.setWidth(width);
+        rect2.smoothProperty().setValue(true);
+        rect2.setFill(Color.valueOf("#A36525"));
+        rect2.relocate(0, 0);
+        rect2.setArcWidth(arc);
+        rect2.setArcHeight(arc);
+
+        dice3Shadow.relocate(30, 90);
+        dice4Shadow.relocate(100, 90);
+        dice3Shadow.setFill(Color.valueOf("#5d2f00"));
+        dice4Shadow.setFill(Color.valueOf("#5d2f00"));
+        dice3Shadow.setArcHeight(20);
+        dice3Shadow.setArcWidth(20);
+        dice4Shadow.setArcWidth(20);
+        dice4Shadow.setArcHeight(20);
+        dice3Shadow.setHeight(60);
+        dice3Shadow.setWidth(60);
+        dice4Shadow.setWidth(60);
+        dice4Shadow.setHeight(60);
+        numOfMovements = 0;
+        doubledDice = false;
+        turnTitle.relocate(200,20);
+        turnTitle.setText("Turn");
+        turnTitle.setFont(Font.font(fontSize));
+        turnTitle.setFill(Color.valueOf("#000000"));
+
+        turnTile.relocate(170, 60);
+        turnTile.setHeight(150);
+        turnTile.setWidth(110);
+        turnTile.setArcHeight(20);
+        turnTile.setArcWidth(20);
+        turnTile.setFill(Color.valueOf("#000000"));
+        firstRoll = true;
+        dice1.firstRollDice(PieceType.red);
+        dice2.firstRollDice(PieceType.white);
+        canRollDice = false;
     }
 
     public boolean canMove (int val){
@@ -263,5 +276,19 @@ public class DiceBoard{
         }
         canRollDice = true;
         diceController.unlockKey();
+    }
+
+    public void reset (){
+        createBoard();
+        dice1.setDiceSide(1);
+        dice2.setDiceSide(1);
+        diceController.unlockKey();
+        try {
+            layout.getChildren().remove(dice3);
+            layout.getChildren().remove(dice4);
+        } catch (Error e) {
+
+        }
+
     }
 }
