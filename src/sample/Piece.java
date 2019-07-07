@@ -64,7 +64,7 @@ public class Piece extends StackPane {
     }
 
     public void changeColor(){
-        border.setFill(pieceType==PieceType.white? Color.valueOf("#F71900"): Color.valueOf("#35A14A"));
+        border.setFill(pieceType==PieceType.white? Color.valueOf("#008304"): Color.valueOf("#FF7C7C"));
     }
 
     public void resetColor(){

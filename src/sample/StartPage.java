@@ -35,7 +35,7 @@ public class StartPage extends Pane {
     private int numOfWins;
 
     public StartPage (){
-        background = rectangleInit(0, 0, width, height, "#21242E");
+        background = rectangleInit(0, 0, width, height, "#240D00");
         getChildren().addAll(background);
         startButton = rectangleInit((width - buttonWidth)/2, 2 * buttonHeight, buttonWidth, buttonHeight, "#bb0000");
         buttonLabel = textInit(width/2 - buttonWidth*9/32 , 2.4 * buttonHeight, "Start Game");

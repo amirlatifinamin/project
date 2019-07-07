@@ -9,14 +9,14 @@ public class LayoutCreator {
     public static int row = 2;
     public static int column = 12;
     public static double triangleBase = 50;
-    private final double diceBoardWidth = DiceBoard.width;
-    private final double diceBoardHeight = DiceBoard.height;
     public static final double stockpileWidth = Stockpile.pileWidth + triangleBase;
     public static final double stockpileHeight = Stockpile.pileHeight;
-    public static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth + ControlPanel.width;
+//    public static double boardWidth = 15 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth + ControlPanel.width;
+    public static double boardWidth = 17 * triangleBase + ScoreBoard.scoreBoardWidth + stockpileWidth;
     public static double boardHeight = 12 * triangleBase;
-    public static double controlPanelX = boardWidth - ControlPanel.width;
-    public static double controlPanelY = triangleBase / 2;
+    public static double controlPanelX = boardWidth - 2.25* triangleBase;
+//    public static double controlPanelY = 12*triangleBase;
+    public static double controlPanelY = 0;
     public static final double scoreboardX = boardWidth - ScoreBoard.scoreBoardWidth - triangleBase / 2 - ControlPanel.width;
     public static final double scoreboardY = triangleBase / 2;
     private final double diceBoardX = scoreboardX;
@@ -48,7 +48,7 @@ public class LayoutCreator {
 
 
     public Pane layout() {
-        pausePage = rectangleInit(0,0, controlPanelX, boardHeight, "#21242E");
+        pausePage = rectangleInit(0,0, controlPanelX, boardHeight, "#4e2400");
         scoreBoard.init(redStockpile, whiteStockpile, diceBoard, redStats, whiteStats, graveyard);
         Pane diceBoardPane = diceBoard.layoutCreator(diceBoardX, diceBoardY, scoreBoard);
         board.setPrefSize(boardWidth, boardHeight);
@@ -75,7 +75,7 @@ public class LayoutCreator {
             }
         });
         board.getChildren().addAll(startPage);
-        board.setStyle("-fx-background-color: #21242E");
+        board.setStyle("-fx-background-color: #4e2400");
         initializeTriangles();
         return board;
     }

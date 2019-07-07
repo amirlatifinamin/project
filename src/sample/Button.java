@@ -1,18 +1,20 @@
 package sample;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-public class Button extends Pane {
+public class Button extends StackPane {
     public Rectangle button;
     public Text text;
-    public static final double fontSize = 20;
-    public static final double width = 200;
-    public static final double height = 75;
+    public static final double fontSize = 15;
+    public static final double width = 75;
+    public static final double height = 50;
     public static final double arc = 20;
     private boolean isActive;
 
@@ -22,6 +24,7 @@ public class Button extends Pane {
         getChildren().addAll(button);
         text = textInit(width/4, height/3, val);
         getChildren().addAll(text);
+        setAlignment(Pos.CENTER);
         if (active)
             activeButton();
         else
@@ -54,7 +57,7 @@ public class Button extends Pane {
     }
 
     public void activeButton (){
-        button.setFill(Color.valueOf("#1155DC"));
+        button.setFill(Color.valueOf("#AB5B26"));
         isActive = true;
     }
 

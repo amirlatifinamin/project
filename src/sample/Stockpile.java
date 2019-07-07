@@ -36,7 +36,7 @@ public class Stockpile extends Pane {
         } else {
             this.pieceColor = "#F2CE7C";
         }
-        pile = rectangleInit(pileX, pileY, pileWidth, pileHeight, "#1b0069");
+        pile = rectangleInit(pileX, pileY, pileWidth, pileHeight, "#350000");
         pileBoarder = rectangleInit(0, 0, pileWidth + 2 * boarderWidth, pileHeight + 2 * boarderWidth, "#000000");
 
         currentPieceY  = 2 * boarderWidth;

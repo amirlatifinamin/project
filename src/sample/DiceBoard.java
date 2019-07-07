@@ -49,7 +49,7 @@ public class DiceBoard {
         yLoc = y;
         layout.relocate(x, y);
         createBoard();
-        layout.getChildren().addAll(rect1);
+//        layout.getChildren().addAll(rect1);
         layout.getChildren().addAll(rect2);
         diceController.setOnMouseClicked(event -> {
             if (firstRoll) {

@@ -47,7 +47,7 @@ public class Triangle extends Pane {
             triangle.getPoints().addAll(0.0, 5 * triangleBase, triangleBase, 5 * triangleBase, triangleBase / 2, 0.0);
         }
         this.initialColor = (type == TriangleType.downRed || type == TriangleType.upRed) ?
-                "#410B00" : "#707070";
+                "#410B00" : "#A45B2B";
         triangle.setFill(Color.valueOf(this.initialColor));
         getChildren().addAll(triangle);
 
@@ -121,7 +121,7 @@ public class Triangle extends Pane {
 
     public void changeColor(PieceType pieceType){
         if(pieceType == typeOfPieces || typeOfPieces==null || numberOfPieces==1){
-            triangle.setFill(Color.valueOf("#28A11B"));
+            triangle.setFill(Color.valueOf("#81FF86"));
         }
     }
 
